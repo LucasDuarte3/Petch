@@ -20,7 +20,7 @@ class User{
         }
     }
 
-    public function emailExist($email){
+    public function emailExists($email){
         $sql = "SELECT id FROM usuarios WHERE email = ?";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$email]);
