@@ -25,19 +25,41 @@ if (isset($_SESSION['sucesso'])) {
         <form action="/backend/controllers/UserController.php" method="POST">
             <input type="hidden" name="acao" value="cadastrar">
             
+            <!-- Campos obrigatórios -->
             <div class="mb-3">
-                <label class="form-label">Digite seu Nome Completo:</label>
+                <label class="form-label">Nome Completo:</label>
                 <input type="text" name="nome" class="form-control" required>
             </div>
             
             <div class="mb-3">
-                <label class="form-label">Digite seu E-mail:</label>
+                <label class="form-label">E-mail:</label>
                 <input type="email" name="email" class="form-control" required>
             </div>
             
             <div class="mb-3">
-                <label class="form-label">Digite sua Senha:</label>
+                <label class="form-label">Senha:</label>
                 <input type="password" name="senha" class="form-control" required minlength="6">
+            </div>
+            
+            <!-- CPF/CNPJ obrigatório -->
+            <div class="mb-3">
+                <label class="form-label">CPF ou CNPJ:</label>
+                <input type="text" name="cpf_cnpj" class="form-control" 
+                    placeholder="Somente números" required
+                    pattern="\d{11,14}" 
+                    title="Digite 11 dígitos para CPF ou 14 para CNPJ">
+                <small class="text-muted">Ex: 12345678901 (CPF) ou 12345678000199 (CNPJ)</small>
+            </div>
+            
+            <!-- Campos opcionais -->
+            <div class="mb-3">
+                <label class="form-label">Telefone:</label>
+                <input type="text" name="telefone" class="form-control">
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Endereço:</label>
+                <input type="text" name="endereco" class="form-control">
             </div>
             
             <div class="d-grid gap-2">

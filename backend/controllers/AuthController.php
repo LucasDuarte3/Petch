@@ -34,5 +34,14 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["acao"]) && $_POST['aca
         header("Location: /frontend/views/login.php");
     }
     exit;
+
+    if(isset($_POST['acao']) && $_POST['acao'] === 'logout'){
+        // Logout
+        session_unset();
+        session_destroy();
+        $_SESSION['sucesso'] = "Você saiu com segurança!";
+        header("Location: /frontend/views/login.php");
+        exit;
+    }
 }
 ?>

@@ -8,18 +8,33 @@ class User{
     }
 
     // aqui fica a função de cadastro do usuario
-    public function create($nome, $email, $senha, $tipo = 'usuario'){
-        try{
+    public function create($nome, $email, $senha, $tipo = 'usuario', $telefone = null, $endereco = null, $cpf_cnpj) {
+        try {
+            // Validação básica de CPF/CNPJ
+            $cpf_cnpj = preg_replace('/[^0-9]/', '', $cpf_cnpj);
+            if (empty($cpf_cnpj) || (!in_array(strlen($cpf_cnpj), [11, 14]))) {
+                throw new Exception("CPF/CNPJ inválido. Digite 11 dígitos para CPF ou 14 para CNPJ.");
+            }
+
             $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
-            $sql = "INSERT INTO usuarios (nome, email, senha, tipo) VALUES (?, ?, ?, ?)";
+            $sql = "INSERT INTO usuarios (nome, email, senha, tipo, telefone, endereco, cpf_cnpj) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmt = $this->pdo->prepare($sql);
-            return $stmt->execute([$nome, $email, $senhaHash, $tipo]);
-        } catch (pdoException $e) {
+            return $stmt->execute([$nome, $email, $senhaHash, $tipo, $telefone, $endereco, $cpf_cnpj]);
+            
+        } catch (PDOException $e) {
             error_log("Erro no cadastro: " . $e->getMessage());
+            
+            // Verifica se o erro é por CPF/CNPJ duplicado
+            if (strpos($e->getMessage(), 'cpf_cnpj') !== false) {
+                throw new Exception("CPF/CNPJ já cadastrado!");
+            }
+            
             return false;
         }
     }
 
+    // Verifica se e-mail já existe
     public function emailExists($email){
         $sql = "SELECT id FROM usuarios WHERE email = ?";
         $stmt = $this->pdo->prepare($sql);
@@ -27,7 +42,16 @@ class User{
         return (bool) $stmt->fetch();
     }
 
-    // aqui ele vai buscar por emial para fazer o login
+    // Verifica se CPF/CNPJ já existe
+    public function documentExists($cpf_cnpj) {
+        $cpf_cnpj = preg_replace('/[^0-9]/', '', $cpf_cnpj);
+        $sql = "SELECT id FROM usuarios WHERE cpf_cnpj = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$cpf_cnpj]);
+        return (bool) $stmt->fetch();
+    }
+
+    // aqui ele vai buscar por email para fazer o login
     public function findByEmail($email){
         $sql = "SELECT * FROM usuarios WHERE email = ?";
         $stmt = $this->pdo->prepare($sql);
