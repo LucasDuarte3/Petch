@@ -13,7 +13,7 @@ class User{
             // Validação básica de CPF/CNPJ
             $cpf_cnpj = preg_replace('/[^0-9]/', '', $cpf_cnpj);
             if (empty($cpf_cnpj) || (!in_array(strlen($cpf_cnpj), [11, 14]))) {
-                throw new Exception("CPF/CNPJ inválido. Digite 11 dígitos para CPF ou 14 para CNPJ.");
+                throw new Exception("CPF/CNPJ inválido.");
             }
 
             $senhaHash = password_hash($senha, PASSWORD_DEFAULT);

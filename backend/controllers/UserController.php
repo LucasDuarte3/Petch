@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$cpf_cnpj]);
         if ($stmt->fetch()) {
-            throw new Exception("CPF/CNPJ já cadastrado!");
+            throw new Exception("CPF/CNPJ já cadastrado no sistema!");
         }
 
         // Cadastro do usuario 

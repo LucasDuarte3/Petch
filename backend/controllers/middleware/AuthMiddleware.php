@@ -10,7 +10,7 @@ function protegerRota($nivelAcesso = 'usuario'){
         }
 
         if ($_SESSION['usuario']['tipo'] !== $nivelAcesso && $nivelAcesso !== 'usuario') {
-            $_SESSION['erro'] = "Acesso não autorizado!";
+            $_SESSION['erro'] = "Acesso não Autorizado!";
             header("Location: /frontend/views/dashboard.php");
             exit;
         }
