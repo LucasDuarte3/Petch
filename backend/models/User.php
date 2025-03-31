@@ -1,14 +1,15 @@
 <?php
+
 class User{
     private $pdo;
 
     // conexao com o banco
-    public function __construct($pdo){
+    public function __construct(PDO $pdo){
         $this->pdo = $pdo;
     }
 
     // aqui fica a função de cadastro do usuario
-    public function create($nome, $email, $senha, $tipo = 'usuario', $telefone = null, $endereco = null, $cpf_cnpj) {
+    public function create($nome, $email, $senha, $tipo = 'usuario', $telefone = null, $endereco = null, $cpf_cnpj = null) {
         try {
             // Validação básica de CPF/CNPJ
             $cpf_cnpj = preg_replace('/[^0-9]/', '', $cpf_cnpj);

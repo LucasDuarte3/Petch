@@ -1,11 +1,13 @@
 <?php
-require_once __DIR__ . '/../models/User.php'; // importa classe user
+
 require_once __DIR__ . '/../config/database.php'; // importa config banco
+require_once __DIR__ . '/../models/User.php'; // importa classe user
 
 session_start(); // inicia a sessão
 
 // aqui onde vai acontecer a validação para o cadastro do usuário
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['acao'] === 'cadastrar'){
+    $pdo = Database::getInstance();
     $user = new User($pdo);
     try {
         // validações dos campos obrigatorios para cadastro
@@ -26,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
 
         // Validação de CPF/CNPJ duplicado
         $sql = "SELECT id FROM usuarios WHERE cpf_cnpj = ?";
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = $pdo->prepare($sql);
         $stmt->execute([$cpf_cnpj]);
         if ($stmt->fetch()) {
             throw new Exception("CPF/CNPJ já cadastrado no sistema!");
@@ -54,8 +56,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
         header("Location: /frontend/views/cadastro.php");
         exit;
     }
-
-    exit;
 }
 
 ?>
