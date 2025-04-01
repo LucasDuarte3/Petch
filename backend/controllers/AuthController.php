@@ -27,7 +27,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["acao"]) && $_POST['aca
             'tipo' => $usuario['tipo']
         ];
 
-        $_SESSION['sucesso'] = "Login realizado com sucesso";
+        $_SESSION['sucesso'] = "Login realizado com sucesso!";
         header("Location: /frontend/views/dashboard.php");
     }else {
         $_SESSION['erro'] = "Email ou senha incorreto";

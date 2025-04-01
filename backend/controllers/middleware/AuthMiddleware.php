@@ -4,7 +4,7 @@ session_start();
 function protegerRota($nivelAcesso = 'usuario'){
     if(isset($_SESSION['usuario'])){
         if(!isset($_SESSION['usuario'])){
-            $_SESSION['erro'] = "Faça login para acessar!";
+            $_SESSION['erro'] = "Faça Login para acessar!";
             header("Location: /frontend/views/login.php");
             exit;
         }

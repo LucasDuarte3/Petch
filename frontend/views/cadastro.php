@@ -68,7 +68,7 @@ if (isset($_SESSION['sucesso'])) {
 
             <div class="mt-3 text-center">
                 <a href="/frontend/views/login.php" class="text-decoration-none link-custom">
-                    Já tem conta? <span class="fw-bold">Faça login</span>
+                    Já tem conta? <span class="fw-bold">Faça login!</span>
                 </a>
             </div>
         </form>

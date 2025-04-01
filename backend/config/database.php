@@ -16,7 +16,7 @@ class Database {
             );
         } catch (PDOException $e) {
             error_log("Erro de conexão: " . $e->getMessage());
-            die("Erro ao conectar ao banco de dados. Verifique as credenciais.");
+            die("Erro ao conectar ao Banco de dados. Verifique as credenciais.");
         }
     }
 

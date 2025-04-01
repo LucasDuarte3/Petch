@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
             $_SESSION['sucesso'] = "Cadastro realizado com sucesso!";
             header("Location: /frontend/views/login.php");
         } else {
-            throw new Exception("Erro ao cadastrar. Tente outro email.");
+            throw new Exception("Erro ao cadastrar. Tente outro email!");
         }
 
     } catch (Exception $e) {
