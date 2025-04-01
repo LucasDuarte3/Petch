@@ -10,7 +10,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["acao"]) && $_POST['aca
 
     // Validações básicas
     if(empty($_POST['email'] || empty($_POST['senha']))){
-        $_SESSION['erro'] = "Preencha todos os campos";
+        $_SESSION['erro'] = "Preencha todos os campos!";
         header("Location: /frontend/views/login.php");
         exit;
     }
