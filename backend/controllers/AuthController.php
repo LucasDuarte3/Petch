@@ -11,7 +11,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["acao"]) && $_POST['aca
     // Validações básicas
     if(empty($_POST['email'] || empty($_POST['senha']))){
         $_SESSION['erro'] = "Preencha todos os campos!";
-        header("Location: /frontend/views/login.php");
+        header("Location: ../../frontend/views/login.php");
         exit;
     }
 
@@ -31,7 +31,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["acao"]) && $_POST['aca
         header("Location: /frontend/views/dashboard.php");
     }else {
         $_SESSION['erro'] = "Email ou senha incorreto";
-        header("Location: /frontend/views/login.php");
+        header("Location: ../../frontend/views/login.php");
     }
     exit;
 
@@ -40,7 +40,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["acao"]) && $_POST['aca
         session_unset();
         session_destroy();
         $_SESSION['sucesso'] = "Você saiu com segurança!";
-        header("Location: /frontend/views/login.php");
+        header("Location: ../../frontend/views/login.php");
         exit;
     }
 }

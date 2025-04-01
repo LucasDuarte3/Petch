@@ -25,7 +25,7 @@ if (isset($_SESSION['sucesso'])) {
         <div class="login-container">
             <h2 class="text-center mb-4">Acesse sua conta</h2>
             
-            <form action="/backend/controllers/AuthController.php" method="POST">
+            <form action="../../backend/controllers/AuthController.php" method="POST">
                 <input type="hidden" name="acao" value="login">
                 
                 <div class="mb-3">
@@ -43,7 +43,7 @@ if (isset($_SESSION['sucesso'])) {
                 </div>
                 
                 <div class="mt-3 text-center">
-                    <a href="/frontend/views/cadastro.php">Não tem conta? <span class="fw-bold">Cadastre-se</span></a>
+                    <a href="../../frontend/views/cadastro.php">Não tem conta? <span class="fw-bold">Cadastre-se</span></a>
                 </div>
             </form>
         </div>
