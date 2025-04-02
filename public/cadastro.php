@@ -22,7 +22,7 @@ if (isset($_SESSION['sucesso'])) {
 <!-- formulario de cadastro -->
     <div class="auth-container fade-in">
         <h1 class="text-center mb-4">Crie sua conta</h1>
-        <form action="../../backend/controllers/UserController.php" method="POST">
+        <form action="/app/controllers/UserController.php" method="POST">
             <input type="hidden" name="acao" value="cadastrar">
             
             <!-- Campos obrigatórios -->
@@ -67,7 +67,7 @@ if (isset($_SESSION['sucesso'])) {
             </div>
 
             <div class="mt-3 text-center">
-                <a href="../../frontend/views/login.php" class="text-decoration-none link-custom">
+                <a href="/public/login.php" class="text-decoration-none link-custom">
                     Já tem conta? <span class="fw-bold">Faça login!</span>
                 </a>
             </div>

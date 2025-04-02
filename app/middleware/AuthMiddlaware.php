@@ -5,14 +5,14 @@ function protegerRota($nivelAcesso = 'usuario') {
     // Verifica se o usuário está logado
     if (!isset($_SESSION['usuario'])) {
         $_SESSION['erro'] = "Faça login para acessar!";
-        header("Location: ../../frontend/views/login.php");
+        header("Location: /public/login.php");
         exit;
     }
 
     // Verifica o nível de acesso
     if ($_SESSION['usuario']['tipo'] !== $nivelAcesso && $nivelAcesso !== 'usuario') {
         $_SESSION['erro'] = "Acesso não autorizado!";
-        header("Location: ../../frontend/views/dashboard.php");
+        header("Location: /admin/dashboard.php");
         exit;
     }
 }

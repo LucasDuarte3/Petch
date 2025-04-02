@@ -18,14 +18,14 @@ if (isset($_SESSION['sucesso'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Petch</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/frontend/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/styles.css">
 </head>
 <body>
 <div class="auth-container fade-in">
         <div class="login-container">
             <h2 class="text-center mb-4">Acesse sua conta</h2>
             
-            <form action="../../backend/controllers/AuthController.php" method="POST">
+            <form action="/app/controllers/AuthController.php" method="POST">
                 <input type="hidden" name="acao" value="login">
                 
                 <div class="mb-3">
@@ -43,7 +43,7 @@ if (isset($_SESSION['sucesso'])) {
                 </div>
                 
                 <div class="mt-3 text-center">
-                    <a href="../../frontend/views/cadastro.php">Não tem conta? <span class="fw-bold">Cadastre-se</span></a>
+                    <a href="/public/cadastro.php">Não tem conta? <span class="fw-bold">Cadastre-se</span></a>
                 </div>
             </form>
         </div>

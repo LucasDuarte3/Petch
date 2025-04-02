@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
             $cpf_cnpj // Já formatado
         )) {
             $_SESSION['sucesso'] = "Cadastro realizado com sucesso!";
-            header("Location: ../../frontend/views/login.php");
+            header("Location: /public/login.php");
         } else {
             throw new Exception("Erro ao cadastrar. Tente outro email!");
         }
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
     } catch (Exception $e) {
         // Captura a exceção e exibe a mensagem de erro
         $_SESSION['erro'] = $e->getMessage();
-        header("Location: ../../frontend/views/cadastro.php");
+        header("Location: /public/cadastro.php");
         exit;
     }
 }
