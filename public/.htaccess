@@ -1,0 +1,19 @@
+# Ativar o Rewrite Engine
+RewriteEngine On
+
+# Redirecionar tudo para index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+
+# Bloquear acesso direto à pasta app e config
+<Directory "/app">
+    Deny from all
+</Directory>
+
+<Directory "/config">
+    Deny from all
+</Directory>
+
+# Definir página de erro personalizada
+ErrorDocument 404 /views/404.php
