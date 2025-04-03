@@ -1,9 +1,13 @@
 <?php
-session_start();
+require_once __DIR__ . '/../config.php'; // Ou o arquivo correto que contém routes.php
 
-require_once __DIR__ . '/../models/User.php';
-require_once __DIR__ . '/../config/database.php';
+// Inicia a sessão apenas se ainda não estiver ativa
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
+require_once dirname(__DIR__) . '/models/User.php'; 
+require_once dirname(__DIR__) . '/config/database.php'; 
 
 if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["acao"]) && $_POST['acao'] === 'login'){
     $userModel = new User($pdo);
@@ -11,7 +15,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["acao"]) && $_POST['aca
     // Validações básicas
     if(empty($_POST['email'] || empty($_POST['senha']))){
         $_SESSION['erro'] = "Preencha todos os campos!";
-        header("Location: /public/login.php");
+        header("Location: " . PUBLIC_PATH . "/login.php");
         exit;
     }
 
@@ -28,10 +32,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["acao"]) && $_POST['aca
         ];
 
         $_SESSION['sucesso'] = "Login realizado com sucesso!";
-        header("Location: /admin/dashboard.php");
+        header("Location: " . ADMIN_PATH . "/dashboard.php");
     }else {
         $_SESSION['erro'] = "Email ou senha incorreto";
-        header("Location: /public/login.php");
+        header("Location: " . PUBLIC_PATH . "/login.php");
     }
     exit;
 
@@ -40,7 +44,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["acao"]) && $_POST['aca
         session_unset();
         session_destroy();
         $_SESSION['sucesso'] = "Você saiu com segurança!";
-        header("Location: /public/login.php");
+        header("Location: " . PUBLIC_PATH . "/login.php");
         exit;
     }
 }

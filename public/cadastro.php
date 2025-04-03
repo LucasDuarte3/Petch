@@ -1,5 +1,10 @@
 <?php
-session_start();
+require_once __DIR__ . '/../config.php'; // Importa routes.php
+
+// Inicia a sessão apenas se ainda não estiver ativa
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 if (isset($_SESSION['erro'])) {
     echo '<div class="alert alert-danger">' . htmlspecialchars($_SESSION['erro']) . '</div>';
     unset($_SESSION['erro']);
@@ -16,13 +21,13 @@ if (isset($_SESSION['sucesso'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro - Petch</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="/frontend/assets/css/styles.css">
+    <link rel="stylesheet" href="<?= ASSETS_PATH ?>/style.css">
 </head>
 <body>
 <!-- formulario de cadastro -->
     <div class="auth-container fade-in">
         <h1 class="text-center mb-4">Crie sua conta</h1>
-        <form action="/app/controllers/UserController.php" method="POST">
+        <form action="<?= CONTROLLERS_PATH ?>/UserController.php" method="POST">
             <input type="hidden" name="acao" value="cadastrar">
             
             <!-- Campos obrigatórios -->
@@ -67,7 +72,7 @@ if (isset($_SESSION['sucesso'])) {
             </div>
 
             <div class="mt-3 text-center">
-                <a href="/public/login.php" class="text-decoration-none link-custom">
+                <a href="<?= PUBLIC_PATH ?>/login.php" class="text-decoration-none link-custom">
                     Já tem conta? <span class="fw-bold">Faça login!</span>
                 </a>
             </div>

@@ -1,5 +1,10 @@
 <?php
-session_start();
+require_once __DIR__ . '/../config.php'; // Ou o arquivo correto que contém routes.php
+
+// Inicia a sessão apenas se ainda não estiver ativa
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 if (isset($_SESSION['erro'])) {
     echo '<div class="alert alert-danger">' . htmlspecialchars($_SESSION['erro']) . '</div>';
     unset($_SESSION['erro']);

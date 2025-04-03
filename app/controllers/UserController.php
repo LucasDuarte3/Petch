@@ -1,8 +1,13 @@
 <?php
-session_start(); // inicia a sessão
+require_once __DIR__ . '/../../config.php'; // Ou o arquivo correto que contém routes.php
 
-require_once __DIR__ . '/../config/database.php'; // importa config banco
-require_once __DIR__ . '/../models/User.php'; // importa classe user
+// Inicia a sessão apenas se ainda não estiver ativa
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+require_once dirname(__DIR__) . '/../config/database.php'; // Configuração do banco
+require_once dirname(__DIR__) . '/../app/models/User.php'; // Classe User
 
 
 // aqui onde vai acontecer a validação para o cadastro do usuário
@@ -44,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
             $cpf_cnpj // Já formatado
         )) {
             $_SESSION['sucesso'] = "Cadastro realizado com sucesso!";
-            header("Location: /public/login.php");
+            header("Location: " . PUBLIC_PATH . "/login.php");
         } else {
             throw new Exception("Erro ao cadastrar. Tente outro email!");
         }
@@ -52,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
     } catch (Exception $e) {
         // Captura a exceção e exibe a mensagem de erro
         $_SESSION['erro'] = $e->getMessage();
-        header("Location: /public/cadastro.php");
+        header("Location: " . PUBLIC_PATH . "/cadastro.php");
         exit;
     }
 }

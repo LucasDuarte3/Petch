@@ -1,18 +1,23 @@
 <?php
-session_start();
+require_once __DIR__ . '/../config.php'; // Ou o arquivo correto que contém routes.php
+
+// Inicia a sessão apenas se ainda não estiver ativa
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 function protegerRota($nivelAcesso = 'usuario') {
     // Verifica se o usuário está logado
     if (!isset($_SESSION['usuario'])) {
         $_SESSION['erro'] = "Faça login para acessar!";
-        header("Location: /public/login.php");
+        header("Location: " . PUBLIC_PATH . "/login.php");
         exit;
     }
 
     // Verifica o nível de acesso
     if ($_SESSION['usuario']['tipo'] !== $nivelAcesso && $nivelAcesso !== 'usuario') {
         $_SESSION['erro'] = "Acesso não autorizado!";
-        header("Location: /admin/dashboard.php");
+        header("Location: " . ADMIN_PATH . "/dashboard.php");
         exit;
     }
 }
