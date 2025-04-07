@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../config.php'; // Ou o arquivo correto que contém routes.php
+require_once __DIR__ . '..\..\..\config.php'; // Ou o arquivo correto que contém routes.php
 
 // Inicia a sessão apenas se ainda não estiver ativa
 if (session_status() === PHP_SESSION_NONE) {
@@ -7,7 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once dirname(__DIR__) . '/models/User.php'; 
-require_once dirname(__DIR__) . '/config/database.php'; 
+require_once dirname(__DIR__) . '/../config/database.php'; 
 
 if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["acao"]) && $_POST['acao'] === 'login'){
     $userModel = new User($pdo);
@@ -32,29 +32,12 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["acao"]) && $_POST['aca
         ];
 
         $_SESSION['sucesso'] = "Login realizado com sucesso!";
-        
-        // Redireciona conforme o tipo de usuário
-        switch ($usuario['tipo']) {
-            case 'adotante':
-                header("Location: " . BASE_PATH . "/pagina_adotante.php"); // ex do caminho que ainda será feito
-                break;
-            case 'doador':
-                header("Location: " . BASE_PATH . "/pagina_doador.php"); // ex do caminho que ainda será feito
-                break;
-            case 'ong':
-                header("Location: " . BASE_PATH . "/pagina_ong.php"); // ex do caminho que ainda será feito
-                break;
-            default:
-                header("Location: " . BASE_PATH . "/dashboard.php"); // leva para area de login do admin
-                break;
-        }
+        header("Location: " . ADMIN_PATH . "/dashboard.php");
     }else {
         $_SESSION['erro'] = "Email ou senha incorreto";
         header("Location: " . PUBLIC_PATH . "/login.php");
     }
     exit;
-
-
 
     if(isset($_POST['acao']) && $_POST['acao'] === 'logout'){
         // Logout
