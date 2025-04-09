@@ -47,13 +47,15 @@ if (in_array($file_extension, STATIC_EXTENSIONS)) {
 $publicRoutes = [
     '/' => 'index.php', // Corrigido para apontar para a raiz
     '/public/login' => 'public/login.php',
-    '/public/cadastro' => 'public/cadastro.php'
+    '/public/cadastro' => 'public/cadastro.php',
+    '/public/cadastro_animais' => 'public/cadastro_animais.php'
 ];
 
 // Rotas de API/Controllers
 $apiRoutes = [
     '/auth' => 'app/controllers/AuthController.php',
-    '/user' => 'app/controllers/UserController.php'
+    '/user' => 'app/controllers/UserController.php',
+    '/animal' => 'app/controllers/AnimalController.php'
 ];
 
 // Rotas Administrativas

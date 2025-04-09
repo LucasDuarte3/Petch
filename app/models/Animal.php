@@ -21,5 +21,11 @@ class Animal{
         }
     }
 
+    public function listaAnimaisPorId($id_usuario){
+        $sql = "SELECT * FROM animais WHERE id_usuario = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$id_usuario]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
 ?>
