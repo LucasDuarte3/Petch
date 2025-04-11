@@ -17,8 +17,8 @@ require_once __DIR__ . '/config.php'; // Importa routes.php
         <h1>Encontre seu novo melhor amigo</h1>
         <p class="hero-subtitle">Adote um animal de estimação e transforme duas vidas: a dele e a sua.</p>
         <div class="hero-buttons">
-            <a href="#" class="btn btn-primary btn-lg">Adotar um Pet</a>
-            <a href="#" class="btn btn-outline-light btn-lg">Doar um Pet</a>
+            <a href="<?= BASE_PATH?>/public/login.php" class="btn btn-primary btn-lg">Adotar um Pet</a>
+            <a href="<?= BASE_PATH?>/public/login.php" class="btn btn-outline-light btn-lg">Doar um Pet</a>
         </div>
     </div>
 </header>

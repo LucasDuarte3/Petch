@@ -20,64 +20,202 @@ if (isset($_SESSION['sucesso'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro - Petch</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="<?= ASSETS_PATH ?>/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="<?= ASSETS_PATH ?>/styleIndex.css">
 </head>
 <body>
-<!-- formulario de cadastro -->
+<div class="split-layout">
+    <!-- Coluna Alternada (Esquerda) -->
+<div class="alternate-column">
+    <!-- Item 1 - Imagem|Texto -->
+    <div class="alternate-item">
+        <div class="alternate-image">
+            <img src="<?= BASE_PATH ?>/images/imgMosaico1.png" alt="Ame">
+        </div>
+        <div class="alternate-text">
+            <h3>Ame</h3>
+        </div>
+    </div>
+
+    <!-- Item 2 - Texto|Imagem -->
+    <div class="alternate-item reverse">
+        <div class="alternate-image">
+            <img src="<?= BASE_PATH ?>/images/imgMosaico2.png" alt="Faça">
+        </div>
+        <div class="alternate-text">
+            <h3>Faça</h3>
+        </div>
+    </div>
+
+    <!-- Item 3 - Imagem|Texto -->
+    <div class="alternate-item">
+        <div class="alternate-image">
+            <img src="<?= BASE_PATH ?>/images/imgMosaico3.png" alt="Adote">
+        </div>
+        <div class="alternate-text">
+            <h3>Adote</h3>
+        </div>
+    </div>
+
+    <!-- Item 4 - Texto|Imagem -->
+    <div class="alternate-item reverse">
+        <div class="alternate-image">
+            <img src="<?= BASE_PATH ?>/images/imgMosaico4.jpg" alt="Proteja">
+        </div>
+        <div class="alternate-text">
+            <h3>Proteja</h3>
+        </div>
+    </div>
+
+    <!-- Item 5 - Imagem|Texto -->
+    <div class="alternate-item">
+        <div class="alternate-image">
+            <img src="<?= BASE_PATH ?>/images/imgMosaico5.jpg" alt="Colabore">
+        </div>
+        <div class="alternate-text">
+            <h3>Colabore</h3>
+        </div>
+    </div>
+
+    <!-- Item 6 - Texto|Imagem -->
+    <div class="alternate-item reverse">
+        <div class="alternate-image">
+            <img src="<?= BASE_PATH ?>/images/imgMosaico6.jpg" alt="Salve">
+        </div>
+        <div class="alternate-text">
+            <h3>Salve</h3>
+        </div>
+    </div>
+</div>
+
+        <!-- Coluna do Formulário (Direita) -->
+<div class="form-column">
     <div class="auth-container fade-in">
-        <h1 class="text-center mb-4">Crie sua conta</h1>
-        <form action="<?= CONTROLLERS_PATH ?>/UserController.php" method="POST">
-            <input type="hidden" name="acao" value="cadastrar">
-            
-            <!-- Campos obrigatórios -->
+        <h1 class="text-center mb-4">Novo usuário? Faça seu cadastro.</h1>
+        <form action="<?= CONTROLLERS_PATH ?>/UserController.php" method="POST" class="w-100">
+        <input type="hidden" name="acao" value="cadastrar">
+        
+        <!-- Linha 1: Nome Completo -->
+        <div class="form-row">
             <div class="mb-3">
-                <label class="form-label">Nome Completo:</label>
+                <label class="form-label">Seu nome*</label>
                 <input type="text" name="nome" class="form-control" required>
             </div>
-            
+        </div>
+
+        <!-- Linha 2: Email e Confirmação de Email -->
+        <div class="form-row">
             <div class="mb-3">
-                <label class="form-label">Email:</label>
+                <label class="form-label">Email*</label>
                 <input type="email" name="email" class="form-control" required>
             </div>
-            
             <div class="mb-3">
-                <label class="form-label">Senha:</label>
-                <input type="password" name="senha" class="form-control" required minlength="6">
+                <label class="form-label">Confirmação de e-mail*</label>
+                <input type="email" name="confirmacao_email" class="form-control" required>
             </div>
-            
-            <!-- CPF/CNPJ obrigatório -->
-            <div class="mb-3">
-                <label class="form-label">CPF ou CNPJ:</label>
-                <input type="text" name="cpf_cnpj" class="form-control" 
-                    placeholder="Somente números" required
-                    pattern="\d{11,14}" 
-                    title="Digite 11 dígitos para CPF ou 14 para CNPJ">
-                <small class="text-muted">Ex: 12345678901 (CPF) ou 12345678000199 (CNPJ)</small>
-            </div>
-            
-            <!-- Campos opcionais -->
-            <div class="mb-3">
-                <label class="form-label">Telefone:</label>
-                <input type="text" name="telefone" class="form-control">
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label">Endereço:</label>
-                <input type="text" name="endereco" class="form-control">
-            </div>
-            
-            <div class="d-grid gap-2">
-                <button type="submit" class="btn-custom">Cadastrar</button>
-            </div>
+        </div>
 
-            <div class="mt-3 text-center">
-                <a href="<?= PUBLIC_PATH ?>/login.php" class="text-decoration-none link-custom">
-                    Já tem conta? <span class="fw-bold">Faça login!</span>
-                </a>
+        <!-- Linha 3: Telefone e Celular -->
+        <div class="form-row">
+            <div class="mb-3">
+                <label class="form-label">Telefone*</label>
+                <input type="tel" name="telefone" class="form-control" required>
             </div>
-        </form>
-    </div>
+            <div class="mb-3">
+                <label class="form-label">Celular*</label>
+                <input type="tel" name="celular" class="form-control" required>
+            </div>
+        </div>
+
+        <!-- Linha 4: CPF e CNPJ -->
+        <div class="form-row">
+            <div class="mb-3">
+                <label class="form-label">CPF</label>
+                <input type="text" name="cpf" class="form-control" placeholder="Somente números">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">CNPJ</label>
+                <input type="text" name="cnpj" class="form-control" placeholder="Somente números">
+            </div>
+        </div>
+
+        <!-- Linha 5: Estado e Cidade -->
+        <div class="form-row">
+            <div class="mb-3">
+                <label class="form-label">Estado*</label>
+                <select name="estado" class="form-control" required>
+                    <option value="">Selecione o Estado</option>
+                    <!-- Opções de estado aqui -->
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Cidade*</label>
+                <select name="cidade" class="form-control" required>
+                    <option value="">Selecione a cidade</option>
+                    <!-- Opções de cidade aqui -->
+                </select>
+            </div>
+        </div>
+
+        <!-- Linha 6: CEP e Endereço -->
+        <div class="form-row">
+            <div class="mb-3">
+                <label class="form-label">CEP*</label>
+                <input type="text" name="cep" class="form-control" placeholder="Digite seu CEP" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Endereço*</label>
+                <input type="text" name="endereco" class="form-control" placeholder="Digite seu Endereço" required>
+            </div>
+        </div>
+
+        <!-- Linha 7: Número e Complemento -->
+        <div class="form-row">
+            <div class="mb-3">
+                <label class="form-label">Número*</label>
+                <input type="text" name="numero" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Complemento</label>
+                <input type="text" name="complemento" class="form-control" placeholder="Casa ou apartamento">
+            </div>
+        </div>
+
+        <!-- Linha 8: Senha e Confirmação de Senha -->
+        <div class="form-row">
+            <div class="mb-3">
+                <label class="form-label">Senha*</label>
+                <input type="password" name="senha" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Confirmação de senha*</label>
+                <input type="password" name="confirmacao_senha" class="form-control" required>
+            </div>
+        </div>
+
+        <!-- Termos e Privacidade -->
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="termos" required>
+            <label class="form-check-label" for="termos">
+                Ao clicar no botão você estará automaticamente concordando com os nossos <a href="#">Termo de uso</a> e <a href="#">Política de Privacidade</a> do site Petch.
+            </label>
+        </div>
+
+        <!-- Botão de Cadastro -->
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn-custom">Salvar</button>
+        </div>
+
+        <!-- Links inferiores -->
+        <div class="mt-3 text-center">
+            <p>
+                <a href="<?= PUBLIC_PATH ?>/login.php" class="text-decoration-none link-custom">Já tem conta?</a> |
+                <a href="<?= PUBLIC_PATH ?>/recuperar-senha.php" class="text-decoration-none link-custom">Esqueceu sua senha?</a> |
+                <a href="<?= PUBLIC_PATH ?>/reenviar-confirmacao.php" class="text-decoration-none link-custom">Não confirmou sua conta?</a>
+            </p>
+        </div>
+    </form>
+</div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
