@@ -1,0 +1,33 @@
+body{
+  margin: 0;
+  box-sizing: border-box;
+  height: 5000px;
+}
+
+nav{
+  background-color: #333;
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+}
+
+nav .Logo{
+  color: #FFF;
+  float: left;
+  display: block;
+  padding: 13px 15px;
+}
+
+nav a {
+  color: #FFF;
+  float: right; /* Alterado de 'right' para 'left' */
+  text-decoration: none;
+  display: block;
+  padding: 14px 16px;
+}
+
+nav a:hover{
+  transition: 0.5s;
+  background-color: #e4e4e4;
+  color: #333;
+}
