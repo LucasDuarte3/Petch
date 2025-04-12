@@ -35,6 +35,21 @@ class User{
         }
     }
 
+    public function createWithToken($nome, $email, $senha) {
+        $token = bin2hex(random_bytes(16));
+        $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
+        
+        $sql = "INSERT INTO usuarios (nome, email, senha, token_verificacao) VALUES (?, ?, ?, ?)";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$nome, $email, $senhaHash, $token]) ? $token : false;
+    }
+    
+    public function verifyToken($token) {
+        $sql = "UPDATE usuarios SET token_verificacao = NULL, verificado = 1 WHERE token_verificacao = ?";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$token]);
+    }
+
     // Verifica se e-mail já existe
     public function emailExists($email){
         $sql = "SELECT id FROM usuarios WHERE email = ?";
