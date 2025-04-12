@@ -8,11 +8,12 @@ if (session_status() === PHP_SESSION_NONE) {
 
 require_once dirname(__DIR__) . '/../config/database.php'; // Configuração do banco
 require_once dirname(__DIR__) . '/../app/models/User.php'; // Classe User
-
+require_once __DIR__ . '/../services/MailService.php';
 
 // aqui onde vai acontecer a validação para o cadastro do usuário
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['acao'] === 'cadastrar'){
     $user = new User($pdo);
+    $mailService = new MailService();
     try {
         // validações dos campos obrigatorios para cadastro
         if (empty($_POST['nome']) || empty($_POST['email']) || empty($_POST['senha']) || empty($_POST['cpf_cnpj'])) {
@@ -38,6 +39,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
             throw new Exception("CPF/CNPJ já cadastrado no sistema!");
         }
 
+        // Cria usuário com token
+        $token = $user->createWithToken(
+            $_POST['nome'],
+            $_POST['email'],
+            $_POST['senha']
+        );
+
+        if ($token) {
+            // Envia e-mail de verificação
+            if ($mailService->sendVerificationEmail($_POST['email'], $_POST['nome'], $token)) {
+                $_SESSION['sucesso'] = "Cadastro realizado com sucesso! Verifique seu e-mail para ativar sua conta.";
+            } else {
+                $_SESSION['aviso'] = "Cadastro realizado, mas não foi possível enviar o e-mail de confirmação.";
+            }
+            header("Location: /frontend/views/auth/login.php");
+        } else {
+            throw new Exception("Erro ao cadastrar usuário.");
+        }
+    } catch (Exception $e) {
+        $_SESSION['erro'] = $e->getMessage();
+        header("Location: /frontend/views/auth/register.php");
+        exit;
+    } catch (Exception $e) {
+        // Captura a exceção e exibe a mensagem de erro
+        $_SESSION['erro'] = $e->getMessage();
+        header("Location: " . PUBLIC_PATH . "/cadastro.php");
+        exit;
+    }
+
         // Cadastro do usuario 
         if ($user->create(
             $_POST['nome'],
@@ -54,12 +84,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
             throw new Exception("Erro ao cadastrar. Tente outro email!");
         }
 
-    } catch (Exception $e) {
-        // Captura a exceção e exibe a mensagem de erro
-        $_SESSION['erro'] = $e->getMessage();
-        header("Location: " . PUBLIC_PATH . "/cadastro.php");
-        exit;
     }
-}
 
 ?>
