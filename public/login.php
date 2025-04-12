@@ -22,9 +22,12 @@ if (isset($_SESSION['sucesso'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Petch</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="<?= ASSETS_PATH ?>/style.css">
+    <link rel="stylesheet" href="<?= ASSETS_PATH ?>/styleLogin.css">
 </head>
 <body>
+    <div class="layout">    
+        <img src="<?=BASE_PATH?>/images/imgLogin.jpg"alt="" srcset="">
+    </div>
 <div class="auth-container fade-in">
         <div class="login-container">
             <h2 class="text-center mb-4">Acesse sua conta</h2>
