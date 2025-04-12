@@ -5,6 +5,7 @@
 define('BASE_PATH', '/Petch'); // Altere conforme sua estrutura de pastas
 define('PUBLIC_PATH', BASE_PATH . '/public');
 define('ADMIN_PATH', BASE_PATH . '/admin');
+define('VIEWS_PATH', BASE_PATH . '/views');
 define('APP_PATH', BASE_PATH . '/app');
 define('CONTROLLERS_PATH', APP_PATH . '/controllers');
 define('MIDDLEWARE_PATH', APP_PATH . '/middleware');

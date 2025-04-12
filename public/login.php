@@ -25,7 +25,7 @@ if (isset($_SESSION['sucesso'])) {
     <link rel="stylesheet" href="<?= ASSETS_PATH ?>/styleLogin.css">
 </head>
 <body>
-    <div class="layout">    
+    <div class="image-login">    
         <img src="<?=BASE_PATH?>/images/imgLogin.jpg"alt="" srcset="">
     </div>
 <div class="auth-container fade-in">
