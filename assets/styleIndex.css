@@ -15,7 +15,7 @@ body {
 /* Layout Principal */
 .split-layout {
     display: flex;
-    height: 100vh; /* Usar height em vez de min-height */
+    /*height: 100vh; /* Usar height em vez de min-height */
     align-items: stretch;
     width: 100%;
 }
@@ -91,18 +91,18 @@ body {
     padding: 2rem;
     background: white;
     overflow-y: auto; /* Permite rolagem apenas no formulário se necessário */
-    height: 100%; /* Garante que a coluna do formulário ocupe toda a altura da tela */
+    height: 80%; /* Garante que a coluna do formulário ocupe toda a altura da tela */
 }
 
-.auth-container {
+/*.auth-container {
     width: 100%;
-    height: auto;
+    height: 80%;
     max-width: 500px;
     padding: 1.5rem;
     background-color: white;
     border-radius: 15px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
+}*/
     
 
 .auth-container h1 {
