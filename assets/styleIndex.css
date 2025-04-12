@@ -16,18 +16,19 @@ body {
 .split-layout {
     display: flex;
     /*height: 100vh; /* Usar height em vez de min-height */
-    align-items: stretch;
+   /*lign-items: stretch;*/
     width: 100%;
 }
 
 /* Coluna de Imagens (Esquerda) */
 .alternate-column {
-    flex: 1.2;
+    flex: 1.5;
     background: #f8f9fa;
     padding: 0; /* Removido padding para imagens se tocarem */
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+    width: 200px;
     gap: 0; /* Removido gap entre itens */
 }
 
@@ -54,12 +55,13 @@ body {
 
 .alternate-image {
     flex: 1;
+
     overflow: hidden;
     position: relative;
 }
 
 .alternate-image img {
-    width: 100%;
+    width:50%;
     height: 100%;
     object-fit: cover;
     position: absolute;
