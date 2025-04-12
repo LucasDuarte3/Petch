@@ -21,7 +21,7 @@ if (isset($_SESSION['sucesso'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro - Petch</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="<?= ASSETS_PATH ?>/styleIndex.css">
+    <link rel="stylesheet" href="<?= ASSETS_PATH ?>/styleCadastro.css">
 </head>
 <body>
 <div class="split-layout">
