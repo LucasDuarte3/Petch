@@ -12,23 +12,36 @@ body {
     line-height: 1.6;
 }
 
+
+
+.container {
+    width: 70%;
+    max-width: 1366px;
+    margin: 0 auto;
+
+}
+
+
+
 /* Layout Principal */
 .split-layout {
     display: flex;
     /*height: 100vh; /* Usar height em vez de min-height */
    /*lign-items: stretch;*/
     width: 100%;
+   
+
 }
 
 /* Coluna de Imagens (Esquerda) */
 .alternate-column {
-    flex: 1.5;
+    /* flex: 1.5; */
     background: #f8f9fa;
     padding: 0; /* Removido padding para imagens se tocarem */
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    width: 200px;
+    width: 40%;
     gap: 0; /* Removido gap entre itens */
 }
 
@@ -55,22 +68,25 @@ body {
 
 .alternate-image {
     flex: 1;
+    width:50%;
 
     overflow: hidden;
     position: relative;
 }
 
 .alternate-image img {
-    width:50%;
+    width:100%;
     height: 100%;
     object-fit: cover;
     position: absolute;
     top: 0;
     left: 0;
+    
 }
 
 .alternate-text {
-    flex: 1;
+    width:50%;
+    /* flex: 1; */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -86,7 +102,6 @@ body {
 
 /* Coluna do Formulário (Direita) */
 .form-column {
-    flex: 0.8;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -94,6 +109,8 @@ body {
     background: white;
     overflow-y: auto; /* Permite rolagem apenas no formulário se necessário */
     height: 80%; /* Garante que a coluna do formulário ocupe toda a altura da tela */
+    width: 60%;
+
 }
 
 /*.auth-container {
