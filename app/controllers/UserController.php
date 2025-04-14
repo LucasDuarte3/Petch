@@ -1,89 +1,117 @@
 <?php
-require_once __DIR__ . '/../../config.php'; // Ou o arquivo correto que contém routes.php
+require_once __DIR__ . '/../../config.php';
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../models/User.php';
+require_once __DIR__ . '/../services/MailService.php';
 
-// Inicia a sessão apenas se ainda não estiver ativa
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-require_once dirname(__DIR__) . '/../config/database.php'; // Configuração do banco
-require_once dirname(__DIR__) . '/../app/models/User.php'; // Classe User
-require_once __DIR__ . '/../services/MailService.php';
-
-// aqui onde vai acontecer a validação para o cadastro do usuário
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['acao'] === 'cadastrar'){
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['acao'] === 'cadastrar') {
     $user = new User($pdo);
     $mailService = new MailService();
+
     try {
-        // validações dos campos obrigatorios para cadastro
-        if (empty($_POST['nome']) || empty($_POST['email']) || empty($_POST['senha']) || empty($_POST['cpf_cnpj'])) {
-            throw new Exception("Preencha todos os campos!");
+        // 1. VALIDAÇÃO DOS DADOS
+        $requiredFields = [
+            'nome', 'email', 'confirmacao_email', 
+            'senha', 'confirmacao_senha', 'telefone', 
+            'celular', 'estado', 'cidade', 'cep', 
+            'endereco', 'numero'
+        ];
+
+        foreach ($requiredFields as $field) {
+            if (empty($_POST[$field])) {
+                throw new Exception("O campo " . ucfirst(str_replace('_', ' ', $field)) . " é obrigatório!");
+            }
         }
 
-        // Validação de formato básico de CPF/CNPJ (11 ou 14 dígitos)
-        $cpf_cnpj = preg_replace('/[^0-9]/', '', $_POST['cpf_cnpj']);
-        if (!in_array(strlen($cpf_cnpj), [11, 14])) {
-            throw new Exception("CPF deve ter 11 dígitos ou CNPJ 14 dígitos!");
+        // Verifica se emails coincidem
+        if ($_POST['email'] !== $_POST['confirmacao_email']) {
+            throw new Exception("Os e-mails não coincidem!");
         }
 
-        // Validação de e-mail duplicado
+        // Verifica se senhas coincidem
+        if ($_POST['senha'] !== $_POST['confirmacao_senha']) {
+            throw new Exception("As senhas não coincidem!");
+        }
+
+        // Verifica se email já existe
         if ($user->emailExists($_POST['email'])) {
-            throw new Exception("Email já cadastrado!");
+            throw new Exception("Este e-mail já está cadastrado!");
         }
 
-        // Validação de CPF/CNPJ duplicado
-        $sql = "SELECT id FROM usuarios WHERE cpf_cnpj = ?";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([$cpf_cnpj]);
-        if ($stmt->fetch()) {
-            throw new Exception("CPF/CNPJ já cadastrado no sistema!");
+        // Verifica CPF/CNPJ
+        $documento = $_POST['cpf'] ?? $_POST['cnpj'] ?? null;
+        if ($documento && $user->documentExists($documento)) {
+            throw new Exception("Este CPF/CNPJ já está cadastrado!");
         }
 
-        // Cria usuário com token
-        $token = $user->createWithToken(
-            $_POST['nome'],
-            $_POST['email'],
-            $_POST['senha']
-        );
+        // 2. PREPARA DADOS PARA CADASTRO
+        $dadosUsuario = [
+            'nome' => $_POST['nome'],
+            'email' => $_POST['email'],
+            'senha' => $_POST['senha'],
+            'telefone' => $_POST['telefone'],
+            'celular' => $_POST['celular'],
+            'cpf' => $_POST['cpf'] ?? null,
+            'cnpj' => $_POST['cnpj'] ?? null,
+            'estado' => $_POST['estado'],
+            'cidade' => $_POST['cidade'],
+            'cep' => $_POST['cep'],
+            'endereco' => $_POST['endereco'],
+            'numero' => $_POST['numero'],
+            'complemento' => $_POST['complemento'] ?? null
+        ];
 
-        if ($token) {
-            // Envia e-mail de verificação
-            if ($mailService->sendVerificationEmail($_POST['email'], $_POST['nome'], $token)) {
+        // 3. CADASTRA USUÁRIO COM TOKEN
+        $userId = $user->createWithToken($dadosUsuario);
+
+        if ($userId) {
+            // 4. ENVIA E-MAIL DE CONFIRMAÇÃO
+            $confirmacaoUrl = BASE_PATH . "/confirmacao/confirmar.php?token=" . $dadosUsuario['token_confirmacao'];
+            
+            if ($mailService->sendConfirmationEmail(
+                $_POST['email'],
+                $_POST['nome'],
+                $confirmacaoUrl
+            )) {
                 $_SESSION['sucesso'] = "Cadastro realizado com sucesso! Verifique seu e-mail para ativar sua conta.";
             } else {
-                $_SESSION['aviso'] = "Cadastro realizado, mas não foi possível enviar o e-mail de confirmação.";
+                $_SESSION['aviso'] = "Cadastro realizado, mas não foi possível enviar o e-mail de confirmação. <a href='".BASE_PATH."/reenviar-confirmacao.php'>Clique aqui</a> para reenviar.";
             }
-            header("Location: /frontend/views/auth/login.php");
-        } else {
-            throw new Exception("Erro ao cadastrar usuário.");
-        }
-    } catch (Exception $e) {
-        $_SESSION['erro'] = $e->getMessage();
-        header("Location: /frontend/views/auth/register.php");
-        exit;
-    } catch (Exception $e) {
-        // Captura a exceção e exibe a mensagem de erro
-        $_SESSION['erro'] = $e->getMessage();
-        header("Location: " . PUBLIC_PATH . "/cadastro.php");
-        exit;
-    }
-
-        // Cadastro do usuario 
-        if ($user->create(
-            $_POST['nome'],
-            $_POST['email'],
-            $_POST['senha'],
-            'usuario', // Tipo padrão
-            $_POST['telefone'] ?? null,
-            $_POST['endereco'] ?? null,
-            $cpf_cnpj // Já formatado
-        )) {
-            $_SESSION['sucesso'] = "Cadastro realizado com sucesso!";
+            
             header("Location: " . PUBLIC_PATH . "/login.php");
-        } else {
-            throw new Exception("Erro ao cadastrar. Tente outro email!");
+            exit();
         }
 
+    } catch (Exception $e) {
+        $_SESSION['erro'] = $e->getMessage();
+        $_SESSION['dados_formulario'] = $_POST; // Mantém os dados digitados
+        header("Location: " . PUBLIC_PATH . "/cadastro.php");
+        exit();
     }
+}
 
+// Rota para reenviar confirmação (opcional)
+if (isset($_GET['acao']) && $_GET['acao'] === 'reenviar-confirmacao') {
+    if (!empty($_SESSION['usuario_temp'])) {
+        $mailService = new MailService();
+        $confirmacaoUrl = BASE_PATH . "/confirmacao/confirmar.php?token=" . $_SESSION['usuario_temp']['token'];
+        
+        if ($mailService->sendConfirmationEmail(
+            $_SESSION['usuario_temp']['email'],
+            $_SESSION['usuario_temp']['nome'],
+            $confirmacaoUrl
+        )) {
+            $_SESSION['sucesso'] = "E-mail de confirmação reenviado com sucesso!";
+        } else {
+            $_SESSION['erro'] = "Erro ao reenviar e-mail de confirmação.";
+            
+        }
+    }
+    header("Location: " . PUBLIC_PATH . "/login.php");
+    exit();
+}
 ?>

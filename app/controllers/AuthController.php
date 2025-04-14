@@ -30,6 +30,11 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["acao"]) && $_POST['aca
             'email' => $usuario['email'],
             'tipo' => $usuario['tipo']
         ];
+        if ($usuario && !$usuario['email_confirmado']) {
+            $_SESSION['erro'] = "Confirme seu e-mail antes de fazer login!";
+            header("Location: login.php");
+            exit;
+        }
 
         $_SESSION['sucesso'] = "Login realizado com sucesso!";
         
