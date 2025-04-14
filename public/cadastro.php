@@ -139,35 +139,62 @@ if (isset($_SESSION['sucesso'])) {
             </div>
         </div>
 
-        <!-- Linha 5: Estado e Cidade -->
-        <div class="form-row">
-            <div class="mb-3">
-                <label class="form-label">Estado*</label>
-                <select name="estado" class="form-control" required>
-                    <option value="">Selecione o Estado</option>
-                    <!-- Opções de estado aqui -->
-                </select>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Cidade*</label>
-                <select name="cidade" class="form-control" required>
-                    <option value="">Selecione a cidade</option>
-                    <!-- Opções de cidade aqui -->
-                </select>
-            </div>
-        </div>
-
         <!-- Linha 6: CEP e Endereço -->
         <div class="form-row">
             <div class="mb-3">
                 <label class="form-label">CEP*</label>
-                <input type="text" name="cep" class="form-control" placeholder="Digite seu CEP" required>
+                <input type="text" id="cep" name="cep" class="form-control" required>
             </div>
             <div class="mb-3">
                 <label class="form-label">Endereço*</label>
-                <input type="text" name="endereco" class="form-control" placeholder="Digite seu Endereço" required>
+                <input type="text" id="endereco" name="endereco" class="form-control" required>
             </div>
         </div>
+
+        <!-- Linha 5: Estado e Cidade -->
+        <div class="form-row">
+          <div class="mb-3">
+            <label class="form-label">Estado*</label>
+            <select name="estado" id="estado" class="form-control" required>
+            <!-- Estados já preenchidos acima -->
+              <option value="">Selecione o Estado</option>
+              <option value="AC">Acre</option>
+              <option value="AL">Alagoas</option>
+              <option value="AP">Amapá</option>
+              <option value="AM">Amazonas</option>
+              <option value="BA">Bahia</option>
+              <option value="CE">Ceará</option>
+              <option value="DF">Distrito Federal</option>
+              <option value="ES">Espírito Santo</option>
+              <option value="GO">Goiás</option>
+              <option value="MA">Maranhão</option>
+              <option value="MT">Mato Grosso</option>
+              <option value="MS">Mato Grosso do Sul</option>
+              <option value="MG">Minas Gerais</option>
+              <option value="PA">Pará</option>
+              <option value="PB">Paraíba</option>
+              <option value="PR">Paraná</option>
+              <option value="PE">Pernambuco</option>
+              <option value="PI">Piauí</option>
+              <option value="RJ">Rio de Janeiro</option>
+              <option value="RN">Rio Grande do Norte</option>
+              <option value="RS">Rio Grande do Sul</option>
+              <option value="RO">Rondônia</option>
+              <option value="RR">Roraima</option>
+              <option value="SC">Santa Catarina</option>
+              <option value="SP">São Paulo</option>
+              <option value="SE">Sergipe</option>
+              <option value="TO">Tocantins</option>
+            </select>
+
+
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Cidade*</label>
+            <input type="text" id="cidade" name="cidade" class="form-control" required>
+          </div>
+        </div>   
 
         <!-- Linha 7: Número e Complemento -->
         <div class="form-row">
@@ -218,5 +245,31 @@ if (isset($_SESSION['sucesso'])) {
 </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <script>
+document.getElementById('cep').addEventListener('blur', function () {
+  let cep = this.value.replace(/\D/g, '');
+
+  if (cep.length === 8) {
+    fetch(`https://viacep.com.br/ws/${cep}/json/`)
+      .then(response => response.json())
+      .then(data => {
+        if (!data.erro) {
+          document.getElementById('endereco').value = data.logradouro;
+          document.getElementById('cidade').value = data.localidade;
+          document.getElementById('estado').value = data.uf;
+        } else {
+          alert('CEP não encontrado.');
+        }
+      })
+      .catch(() => {
+        alert('Erro ao buscar o CEP.');
+      });
+  } else {
+    alert('CEP inválido. Deve conter 8 números.');
+  }
+});
+</script>
+
 </body>
 </html>
