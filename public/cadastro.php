@@ -149,6 +149,10 @@ if (isset($_SESSION['sucesso'])) {
                 <label class="form-label">Endereço*</label>
                 <input type="text" id="endereco" name="endereco" class="form-control" required>
             </div>
+            <div class="mb-3">
+        <label class="form-label">Bairro*</label>
+        <input type="text" id="bairro" name="bairro" class="form-control" required>
+    </div>
         </div>
 
         <!-- Linha 5: Estado e Cidade -->
@@ -258,6 +262,7 @@ document.getElementById('cep').addEventListener('blur', function () {
           document.getElementById('endereco').value = data.logradouro;
           document.getElementById('cidade').value = data.localidade;
           document.getElementById('estado').value = data.uf;
+          document.getElementById('bairro').value = data.bairro;
         } else {
           alert('CEP não encontrado.');
         }

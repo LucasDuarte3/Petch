@@ -60,6 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
             'estado' => $_POST['estado'],
             'cidade' => $_POST['cidade'],
             'cep' => $_POST['cep'],
+            'bairro' => $_POST['bairro'],
             'endereco' => $_POST['endereco'],
             'numero' => $_POST['numero'],
             'complemento' => $_POST['complemento'] ?? null
