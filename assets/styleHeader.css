@@ -1,14 +1,9 @@
-body{
-  margin: 0;
-  box-sizing: border-box;
-  height: 5000px;
-}
-
 nav{
-  background-color: #333;
+  background-color: #3498db;
   overflow: hidden;
   position: fixed;
   width: 100%;
+  z-index: 1000;
 }
 
 nav .Logo{
@@ -30,4 +25,21 @@ nav a:hover{
   transition: 0.5s;
   background-color: #e4e4e4;
   color: #333;
+}
+@media (max-width: 768px) {
+  nav {
+      grid-template-columns: repeat(2, 1fr);
+  }
+  nav a{
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  nav {
+      grid-template-columns: 1fr;
+  }
+  nav a{
+    font-size: 10px;
+  }
 }

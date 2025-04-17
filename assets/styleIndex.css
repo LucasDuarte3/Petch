@@ -13,17 +13,6 @@ body {
     line-height: 1.6;
 }
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-header {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
 h1 {
     font-size: 2.5rem;
     color: #f3f3f3;
@@ -35,21 +24,6 @@ h2 {
     color: #3498db;
     margin: 20px 0;
 }
-
-.adoption-section {
-    margin-bottom: 40px;
-}
-
-.adoption-list {
-    list-style-type: none;
-    margin-left: 20px;
-}
-
-.adoption-list li {
-    margin-bottom: 10px;
-    font-weight: bold;
-}
-
 .pets-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -75,51 +49,6 @@ h2 {
     font-size: 0.9rem;
 }
 
-hr {
-    border: 0;
-    height: 1px;
-    background-color: #ddd;
-    margin: 40px 0;
-}
-
-.footer-links {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 30px;
-    margin-bottom: 40px;
-}
-
-.link-column h3 {
-    font-size: 1.2rem;
-    margin-bottom: 15px;
-    color: #2c3e50;
-}
-
-.link-column ul {
-    list-style-type: none;
-}
-
-.link-column li {
-    margin-bottom: 10px;
-}
-
-.link-column a {
-    text-decoration: none;
-    color: #3498db;
-    transition: color 0.3s;
-}
-
-.link-column a:hover {
-    color: #2980b9;
-}
-
-.copyright {
-    text-align: center;
-    margin-top: 30px;
-    color: #7f8c8d;
-    font-size: 0.9rem;
-}
-
 @media (max-width: 768px) {
     .pets-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -139,20 +68,6 @@ hr {
         grid-template-columns: 1fr;
     }
 }
-
-/* imagens */
-topo {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-}
-
-.topo img {
-    width: 100%;
-    height: auto; /* Mantém a proporção */
-    display: block; /* Remove espaços indesejados abaixo da imagem */
-}
-
 
 /* Hero Section Ajustada */
 .hero-section {
@@ -216,7 +131,7 @@ topo {
 }
 @media (max-width: 768px) {
     .hero-content h1 {
-        font-size: 2rem;
+        display: none;
     }
     
     .hero-subtitle {
@@ -224,13 +139,15 @@ topo {
     }
     
     .hero-buttons {
-        flex-direction: column;
+        flex-direction: row;
         align-items: center;
     }
     
     .hero-buttons .btn {
         width: 100%;
-        max-width: 250px;
+        max-width: 100px;
+        max-height: 30px;
+        font-size: 10px;
     }
 }
     /* Fim CSS INDEX */

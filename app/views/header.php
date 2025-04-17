@@ -23,12 +23,13 @@ if (isset($_SESSION['sucesso'])) {
 </head>
 <body>
 <nav>
-    <div class="logo">Logo</div>
+
     <a href="#">Contato</a>
     <a href="#">Sobre Nós</a>
     <a href="#">Animais</a>
     <a href="<?=PUBLIC_PATH?>/login.php">Doar Animal</a>
     <a href="/index.php">Inicio</a>
+    
 </nav>
 </div>
 </body>
