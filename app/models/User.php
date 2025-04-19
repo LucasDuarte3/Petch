@@ -148,6 +148,76 @@ class User {
         return (bool) $stmt->fetch();
     }
 
-    
+    /**
+     * Gera token para redefinição de senha
+     * @param string $email
+     * @return string|false Token gerado ou false em caso de erro
+     */
+    public function generatePasswordResetToken($email) {
+        try {
+            // Verifica se o e-mail existe
+            $user = $this->findByEmail($email);
+            if (!$user) {
+                throw new Exception("E-mail não cadastrado.");
+            }
+
+            // Gera token e data de expiração (1 hora)
+            $token = bin2hex(random_bytes(32));
+            $token_expira = date('Y-m-d H:i:s', strtotime('+1 hour'));
+
+            // Atualiza no banco
+            $sql = "UPDATE usuarios SET 
+                    token_reset = ?,
+                    token_expira = ?
+                    WHERE email = ?";
+            
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$token, $token_expira, $email]);
+
+            return $token;
+        } catch (PDOException $e) {
+            error_log("Erro ao gerar token: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Redefine a senha com base no token válido
+     * @param string $token
+     * @param string $novaSenha
+     * @return bool Sucesso da operação
+     */
+    public function resetPassword($token, $novaSenha) {
+        try {
+            // Verifica se o token é válido e não expirou
+            $sql = "SELECT id FROM usuarios 
+                    WHERE token_reset = ? 
+                    AND token_expira > NOW()";
+            
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$token]);
+
+            if ($stmt->rowCount() === 0) {
+                throw new Exception("Token inválido ou expirado!");
+            }
+
+            // Atualiza a senha e limpa o token
+            $sql = "UPDATE usuarios SET 
+                    senha = ?,
+                    token_reset = NULL,
+                    token_expira = NULL
+                    WHERE token_reset = ?";
+            
+            $stmt = $this->pdo->prepare($sql);
+            return $stmt->execute([
+                password_hash($novaSenha, PASSWORD_DEFAULT),
+                $token
+            ]);
+        } catch (PDOException $e) {
+            error_log("Erro ao redefinir senha: " . $e->getMessage());
+            return false;
+        }
+    }
+
 }
 ?>
