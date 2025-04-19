@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../../config.php';
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../models/User.php';
-require_once __DIR__ . '/../services/MailService.php';
+require_once __DIR__ . '/../service/MailService.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -16,9 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
         // 1. VALIDAÇÃO DOS DADOS
         $requiredFields = [
             'nome', 'email', 'confirmacao_email', 
-            'senha', 'confirmacao_senha', 'telefone', 
-            'celular', 'estado', 'cidade', 'cep', 
-            'endereco', 'numero'
+            'senha', 'confirmacao_senha', 'estado', 'cidade', 'cep', 
+            'endereco'
         ];
 
         foreach ($requiredFields as $field) {
@@ -53,25 +52,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
             'nome' => $_POST['nome'],
             'email' => $_POST['email'],
             'senha' => $_POST['senha'],
-            'telefone' => $_POST['telefone'],
-            'celular' => $_POST['celular'],
-            'cpf' => $_POST['cpf'] ?? null,
-            'cnpj' => $_POST['cnpj'] ?? null,
-            'estado' => $_POST['estado'],
-            'cidade' => $_POST['cidade'],
-            'cep' => $_POST['cep'],
-            'bairro' => $_POST['bairro'],
-            'endereco' => $_POST['endereco'],
-            'numero' => $_POST['numero'],
-            'complemento' => $_POST['complemento'] ?? null
+            'telefone' => $_POST['telefone'] ?? null,
+            'endereco' => $_POST['endereco'] ?? null,
+            'cpf_cnpj' => $_POST['cpf_cnpj'] ?? null,
+            'tipo' => 'usuario', // Tipo de usuário (pode ser 'usuario' ou 'admin')
+            'token_verificacao' => bin2hex(random_bytes(32)), // Verificação de e-mail
+            'token_reset' => null, // Só será preenchido quando o usuário solicitar
+            'token_expira' => date('Y-m-d H:i:s', strtotime('+24 hours'))
         ];
 
         // 3. CADASTRA USUÁRIO COM TOKEN
         $userId = $user->createWithToken($dadosUsuario);
 
         if ($userId) {
+            $_SESSION['usuario_temp'] = [
+                'email' => $_POST['email'],
+                'nome' => $_POST['nome'],
+                'token' => $dadosUsuario['token_verificacao']
+            ];
             // 4. ENVIA E-MAIL DE CONFIRMAÇÃO
-            $confirmacaoUrl = BASE_PATH . "/confirmacao/confirmar.php?token=" . $dadosUsuario['token_confirmacao'];
+            $confirmacaoUrl = PUBLIC_PATH . "/confirmacao/confirmar.php?token=" . $dadosUsuario['token_verificacao'];
             
             if ($mailService->sendConfirmationEmail(
                 $_POST['email'],
@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
 if (isset($_GET['acao']) && $_GET['acao'] === 'reenviar-confirmacao') {
     if (!empty($_SESSION['usuario_temp'])) {
         $mailService = new MailService();
-        $confirmacaoUrl = BASE_PATH . "/confirmacao/confirmar.php?token=" . $_SESSION['usuario_temp']['token'];
+        $confirmacaoUrl = PUBLIC_PATH . "/confirmacao/confirmar.php?token=" . $_SESSION['usuario_temp']['token'];
         
         if ($mailService->sendConfirmationEmail(
             $_SESSION['usuario_temp']['email'],

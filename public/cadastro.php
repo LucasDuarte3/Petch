@@ -100,6 +100,7 @@ if (isset($_SESSION['sucesso'])) {
             <div class="mb-3">
                 <label class="form-label">Seu nome*</label>
                 <input type="text" name="nome" class="form-control" required>
+                <input type="hidden" name="tipo" value="usuario">
             </div>
         </div>
 
@@ -119,11 +120,11 @@ if (isset($_SESSION['sucesso'])) {
         <div class="form-row">
             <div class="mb-3">
                 <label class="form-label">Telefone*</label>
-                <input type="tel" name="telefone" class="form-control" required>
+                <input type="tel" name="telefone" class="form-control">
             </div>
             <div class="mb-3">
                 <label class="form-label">Celular*</label>
-                <input type="tel" name="celular" class="form-control" required>
+                <input type="tel" name="celular" class="form-control">
             </div>
         </div>
 
@@ -143,15 +144,15 @@ if (isset($_SESSION['sucesso'])) {
         <div class="form-row">
             <div class="mb-3">
                 <label class="form-label">CEP*</label>
-                <input type="text" id="cep" name="cep" class="form-control" required>
+                <input type="text" id="cep" name="cep" class="form-control">
             </div>
             <div class="mb-3">
                 <label class="form-label">Endereço*</label>
-                <input type="text" id="endereco" name="endereco" class="form-control" required>
+                <input type="text" id="endereco" name="endereco" class="form-control">
             </div>
             <div class="mb-3">
         <label class="form-label">Bairro*</label>
-        <input type="text" id="bairro" name="bairro" class="form-control" required>
+        <input type="text" id="bairro" name="bairro" class="form-control">
     </div>
         </div>
 
@@ -159,7 +160,7 @@ if (isset($_SESSION['sucesso'])) {
         <div class="form-row">
           <div class="mb-3">
             <label class="form-label">Estado*</label>
-            <select name="estado" id="estado" class="form-control" required>
+            <select name="estado" id="estado" class="form-control">
             <!-- Estados já preenchidos acima -->
               <option value="">Selecione o Estado</option>
               <option value="AC">Acre</option>
@@ -196,7 +197,7 @@ if (isset($_SESSION['sucesso'])) {
           </div>
           <div class="mb-3">
             <label class="form-label">Cidade*</label>
-            <input type="text" id="cidade" name="cidade" class="form-control" required>
+            <input type="text" id="cidade" name="cidade" class="form-control">
           </div>
         </div>   
 
@@ -204,7 +205,7 @@ if (isset($_SESSION['sucesso'])) {
         <div class="form-row">
             <div class="mb-3">
                 <label class="form-label">Número*</label>
-                <input type="text" name="numero" class="form-control" required>
+                <input type="text" name="numero" class="form-control">
             </div>
             <div class="mb-3">
                 <label class="form-label">Complemento</label>
@@ -241,7 +242,7 @@ if (isset($_SESSION['sucesso'])) {
         <div class="mt-3 text-center">
             <p>
                 <a href="<?= PUBLIC_PATH ?>/login.php" class="text-decoration-none link-custom">Já tem conta?</a> |
-                <a href="<?= PUBLIC_PATH ?>/recuperar-senha.php" class="text-decoration-none link-custom">Esqueceu sua senha?</a> |
+                <a href="<?= PUBLIC_PATH ?>/RedefinirSenha.php" class="text-decoration-none link-custom">Esqueceu sua senha?</a> |
                 <a href="<?= PUBLIC_PATH ?>/reenviar-confirmacao.php" class="text-decoration-none link-custom">Não confirmou sua conta?</a>
             </p>
         </div>
@@ -249,32 +250,7 @@ if (isset($_SESSION['sucesso'])) {
 </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
-    <script>
-document.getElementById('cep').addEventListener('blur', function () {
-  let cep = this.value.replace(/\D/g, '');
-
-  if (cep.length === 8) {
-    fetch(`https://viacep.com.br/ws/${cep}/json/`)
-      .then(response => response.json())
-      .then(data => {
-        if (!data.erro) {
-          document.getElementById('endereco').value = data.logradouro;
-          document.getElementById('cidade').value = data.localidade;
-          document.getElementById('estado').value = data.uf;
-          document.getElementById('bairro').value = data.bairro;
-        } else {
-          alert('CEP não encontrado.');
-        }
-      })
-      .catch(() => {
-        alert('Erro ao buscar o CEP.');
-      });
-  } else {
-    alert('CEP inválido. Deve conter 8 números.');
-  }
-});
-</script>
+    <script src="<?= JS_PATH ?>/script.js"></script>
 
 </body>
 </html>

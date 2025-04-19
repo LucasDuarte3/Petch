@@ -54,7 +54,7 @@ if (isset($_SESSION['sucesso'])) {
                 </div>
                 <!-- Falta fazer a pagina de recuperação da senha -->
                 <div class="d-grid gap-2 mt-2">
-                    <button type="button" class="btn btn-secondary" onclick="window.location.href='<?= BASE_PATH ?>/recuperar_senha.php'">Esqueci minha senha</button> 
+                <button type="button" class="btn btn-secondary" onclick="window.location.href='<?= PUBLIC_PATH ?>/RedefinirSenha.php'">Esqueci minha senha</button> 
                 </div>
             </form>
         </div>

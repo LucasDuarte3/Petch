@@ -43,5 +43,31 @@ class MailService {
             return false;
         }
     }
+
+    public function sendPasswordResetEmail($toEmail, $toName, $resetUrl) {
+        try {
+            $this->mail->setFrom('seuemail@gmail.com', 'Petch - Redefinição de Senha');
+            $this->mail->addAddress($toEmail, $toName);
+            $this->mail->isHTML(true);
+            $this->mail->Subject = 'Redefina sua senha no Petch';
+            
+            $this->mail->Body = "
+                <h1>Olá, $toName!</h1>
+                <p>Recebemos uma solicitação para redefinir sua senha.</p>
+                <p>Clique no link abaixo para continuar:</p>
+                <p><a href='$resetUrl' style='background: #4CAF50; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px;'>Redefinir Senha</a></p>
+                <p>Ou copie este link: $resetUrl</p>
+                <p>Este link expira em 1 hora.</p>
+                <p>Se não foi você quem solicitou, ignore este e-mail.</p>
+            ";
+            
+            $this->mail->AltBody = "Redefina sua senha: $resetUrl";
+            
+            return $this->mail->send();
+        } catch (Exception $e) {
+            error_log("Erro ao enviar e-mail de redefinição: " . $e->getMessage());
+            return false;
+        }
+    }
 }
 ?>

@@ -54,7 +54,11 @@ $publicRoutes = [
 // Rotas de API/Controllers
 $apiRoutes = [
     '/auth' => 'app/controllers/AuthController.php',
-    '/user' => 'app/controllers/UserController.php'
+    '/user' => 'app/controllers/UserController.php',
+    '/mail' => 'app/controllers/MailController.php',
+    '/modelUser' => 'app/models/User.php',
+    '/modelMail' => 'app/models/UserMail.php',
+    '/service' => 'app/service/MailService.php'
 ];
 
 // Rotas Administrativas
