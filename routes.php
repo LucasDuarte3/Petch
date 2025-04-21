@@ -55,7 +55,8 @@ $publicRoutes = [
 $apiRoutes = [
     '/auth' => 'app/controllers/AuthController.php',
     '/user' => 'app/controllers/UserController.php',
-    '/animal' => 'app/controllers/AnimalController.php'
+    '/animal' => 'app/controllers/AnimalController.php',
+    '/consulta_animal' => 'app/ConsultarAnimalController.php'
 ];
 
 // Rotas Administrativas

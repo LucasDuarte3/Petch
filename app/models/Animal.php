@@ -27,5 +27,12 @@ class Animal{
         $stmt->execute([$id_usuario]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function getAnimalByID($id){
+        $sql = "SELECT * FROM animais WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
 ?>
