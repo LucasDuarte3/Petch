@@ -1,6 +1,6 @@
 <?php 
 $host = "localhost"; 
-$port = "3306"; // mudar a porta conforme o xampp
+$port = "3307"; // mudar a porta conforme o xampp
 $dbname = "site_animal"; 
 $user = "root"; 
 $pass = ""; 

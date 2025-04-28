@@ -1,7 +1,18 @@
 <?php
-
 require_once __DIR__ . '/config.php'; // Importa routes.php
 
+// Inicia a sessão apenas se ainda não estiver ativa
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+if (isset($_SESSION['erro'])) {
+    echo '<div class="alert alert-danger">' . htmlspecialchars($_SESSION['erro']) . '</div>';
+    unset($_SESSION['erro']);
+}
+if (isset($_SESSION['sucesso'])) {
+    echo '<div class="alert alert-success">' . htmlspecialchars($_SESSION['sucesso']) . '</div>';
+    unset($_SESSION['sucesso']);
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -15,7 +26,7 @@ require_once __DIR__ . '/config.php'; // Importa routes.php
 </head>
 
 <body>
-    <div id="menu"<?php include 'app/views/header.php'; ?>></div>
+    <div><?php include 'app/views/header.php'; ?></div>
 
     <div class="hero-section">
         <img src="<?= IMG_PATH ?>/imagemFundoInicial.jpg" alt="Banner principal" class="hero-image">
@@ -71,7 +82,7 @@ require_once __DIR__ . '/config.php'; // Importa routes.php
         </div>
     </div>
 
-    <?php include 'app/views/footer.php'; ?>
+    <div><?php include 'app/views/footer.php'; ?></div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 

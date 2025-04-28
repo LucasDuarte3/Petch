@@ -3,6 +3,7 @@ require_once __DIR__ . '/../../config.php';
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../service/MailService.php';
+require_once __DIR__ . '/../models/Adocao.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -91,6 +92,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
         $_SESSION['erro'] = $e->getMessage();
         $_SESSION['dados_formulario'] = $_POST; // Mantém os dados digitados
         header("Location: " . PUBLIC_PATH . "/cadastro.php");
+        exit();
+    }
+}
+
+// ============================
+// FORMULÁRIO DE ADOÇÃO
+// ============================
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['acao'] === 'form_adocao') {
+    $formAdocao = new FormAdocao($pdo);
+
+    try {
+        $dados = [
+            'nome' => $_POST['nome'],
+            'email' => $_POST['email'],
+            'telefone' => $_POST['telefone'],
+            'endereco' => $_POST['endereco'],
+            'tipo_moradia' => $_POST['tipo_moradia'],
+            'tela_protecao' => $_POST['tela_protecao'],
+            'condominio_permite' => $_POST['condominio_permite'],
+            'espaco_suficiente' => $_POST['espaco_suficiente'],
+            'condicoes_financeiras' => $_POST['condicoes_financeiras'],
+            'compromisso' => $_POST['compromisso']
+        ];
+
+        $formAdocao->salvar($dados);
+
+        header("Location: " . PUBLIC_PATH . "/confirmacao/sucesso.html");
+        exit();
+
+    } catch (Exception $e) {
+        $_SESSION['erro'] = "Erro ao enviar formulário: " . $e->getMessage();
+        header("Location: " . PUBLIC_PATH . "/form_adocao.php");
         exit();
     }
 }

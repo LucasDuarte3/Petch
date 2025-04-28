@@ -1,45 +1,26 @@
-nav{
-  background-color: #3498db;
-  overflow: hidden;
-  position: fixed;
-  width: 100%;
-  z-index: 1000;
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  background-color: #f1f1f1;
+  color: #003366;
 }
 
-nav .Logo{
-  color: #FFF;
-  float: left;
-  display: block;
-  padding: 13px 15px;
+.topbar {
+  background-color: #0047a0;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+}
+.logo {
+  font-weight: bold;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-nav a {
-  color: #FFF;
-  float: right; /* Alterado de 'right' para 'left' */
-  text-decoration: none;
-  display: block;
-  padding: 14px 16px;
-}
-
-nav a:hover{
-  transition: 0.5s;
-  background-color: #e4e4e4;
-  color: #333;
-}
-@media (max-width: 768px) {
-  nav {
-      grid-template-columns: repeat(2, 1fr);
-  }
-  nav a{
-    font-size: 10px;
-  }
-}
-
-@media (max-width: 480px) {
-  nav {
-      grid-template-columns: 1fr;
-  }
-  nav a{
-    font-size: 10px;
-  }
+.menu, .user-icon {
+  font-size: 1rem;
 }

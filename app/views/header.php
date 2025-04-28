@@ -22,15 +22,10 @@ if (isset($_SESSION['sucesso'])) {
     <link rel="stylesheet" href="<?= ASSETS_PATH ?>/styleHeader.css">
 </head>
 <body>
-<nav>
-
-    <a href="#">Contato</a>
-    <a href="#">Sobre Nós</a>
-    <a href="#">Animais</a>
-    <a href="<?=PUBLIC_PATH?>/login.php">Doar Animal</a>
-    <a href="/index.php">Inicio</a>
-    
-</nav>
-</div>
+    <header class="topbar">
+        <div class="logo">❤️ Petch</div>
+        <div class="menu">Quem somos</div>
+        <div class="user-icon">👤</div>
+    </header>
 </body>
 </html>
