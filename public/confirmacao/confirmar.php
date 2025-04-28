@@ -5,6 +5,7 @@
 require_once __DIR__ . '/../../config.php';
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../app/models/User.php';
+require_once __DIR__ . '/../../app/controllers/UserController.php';
 
 // 2. Inicia sessão se não estiver ativa
 if (session_status() === PHP_SESSION_NONE) {

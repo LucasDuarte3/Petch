@@ -72,7 +72,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
                 'token' => $dadosUsuario['token_verificacao']
             ];
             // 4. ENVIA E-MAIL DE CONFIRMAÇÃO
-            $confirmacaoUrl = PUBLIC_PATH . "/confirmacao/confirmar.php?token=" . $dadosUsuario['token_verificacao'];
+            $confirmacaoUrl = (isset($_SERVER['HTTPS']) ? 'https://' : 'http://') . 
+                     $_SERVER['HTTP_HOST'] . 
+                     PUBLIC_PATH . 
+                     "/confirmacao/confirmar.php?token=" . 
+                     urlencode($dadosUsuario['token_verificacao']);
             
             if ($mailService->sendConfirmationEmail(
                 $_POST['email'],
