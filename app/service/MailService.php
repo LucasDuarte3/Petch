@@ -32,12 +32,11 @@ class MailService {
                     <p>Obrigado por se cadastrar no Petch!</p>
                     <p>Para ativar sua conta, clique no botão abaixo:</p>
                     <p>
-                        <a href='htmlspecialchars($confirmationUrl)' style='display: inline-block; background: #4CAF50; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px;'>
+                        <a href='$confirmationUrl' style='display: inline-block; background: #4CAF50; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px;'>
                             Confirmar E-mail
                         </a>
                     </p>
                     <p>Ou copie e cole este link no navegador: $confirmationUrl</p>
-                    <p>Este link expira em 24 horas.</p>
                 </body>
                 </html>
             ";
@@ -70,7 +69,6 @@ class MailService {
                         </a>
                     </p>
                     <p>Ou copie e cole este link no navegador: $resetUrl</p>
-                    <p>Este link expira em 1 hora.</p>
                     <p>Se não foi você quem solicitou, ignore este e-mail.</p>
                 </body>
                 </html>

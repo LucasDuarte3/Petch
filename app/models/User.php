@@ -21,13 +21,12 @@ class User {
             // Gera token e data de expiração (24 horas)
             $token = $dados['token_verificacao']; // Já vem do controller
             $token_reset = $dados['token_reset'] ?? null;
-            $token_expira = $dados['token_expira'] ?? date('Y-m-d H:i:s', strtotime('+24 hours'));
 
 
             $sql = "INSERT INTO usuarios (
                 nome, email, senha, telefone, endereco,
-                cpf_cnpj, tipo, token_verificacao, verificado, token_reset, token_expira
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                cpf_cnpj, tipo, token_verificacao, verificado, token_reset
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
@@ -40,8 +39,7 @@ class User {
                 $dados['tipo'] ?? 'usuario',
                 $token,
                 0, // Não verificado inicialmente
-                $token_reset,
-                $token_expira
+                $token_reset
             ]);
 
             return $this->pdo->lastInsertId();
@@ -70,7 +68,7 @@ class User {
     public function verifyEmail($token) {
         try {
             // Primeiro verifica se o token é válido e não expirou
-            $sql = "SELECT id FROM usuarios WHERE token_verificacao = ? AND token_expira > NOW()";
+            $sql = "SELECT id FROM usuarios WHERE token_verificacao = ?";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$token]);
             
@@ -81,8 +79,7 @@ class User {
             // Atualiza o usuário como confirmado
             $sql = "UPDATE usuarios SET 
                     verificado = 1,
-                    token_verificacao = NULL,
-                    token_expira = NULL
+                    token_verificacao = NULL
                     WHERE token_verificacao = ?";
                     
             $stmt = $this->pdo->prepare($sql);
@@ -163,16 +160,14 @@ class User {
 
             // Gera token e data de expiração (1 hora)
             $token = bin2hex(random_bytes(32));
-            $token_expira = date('Y-m-d H:i:s', strtotime('+1 hour'));
 
             // Atualiza no banco
             $sql = "UPDATE usuarios SET 
-                    token_reset = ?,
-                    token_expira = ?
+                    token_reset = ?
                     WHERE email = ?";
             
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([$token, $token_expira, $email]);
+            $stmt->execute([$token, $email]);
 
             return $token;
         } catch (PDOException $e) {
@@ -191,8 +186,7 @@ class User {
         try {
             // Verifica se o token é válido e não expirou
             $sql = "SELECT id FROM usuarios 
-                    WHERE token_reset = ? 
-                    AND token_expira > NOW()";
+                    WHERE token_reset = ?";
             
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$token]);
@@ -204,8 +198,7 @@ class User {
             // Atualiza a senha e limpa o token
             $sql = "UPDATE usuarios SET 
                     senha = ?,
-                    token_reset = NULL,
-                    token_expira = NULL
+                    token_reset = NULL
                     WHERE token_reset = ?";
             
             $stmt = $this->pdo->prepare($sql);

@@ -59,7 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
             'tipo' => 'usuario', // Tipo de usuário (pode ser 'usuario' ou 'admin')
             'token_verificacao' => bin2hex(random_bytes(32)), // Verificação de e-mail
             'token_reset' => null, // Só será preenchido quando o usuário solicitar
-            'token_expira' => date('Y-m-d H:i:s', strtotime('+24 hours'))
         ];
 
         // 3. CADASTRA USUÁRIO COM TOKEN

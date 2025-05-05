@@ -22,7 +22,7 @@ if (isset($_GET['token'])) {
         if ($user->verifyEmail($token)) {
             $_SESSION['sucesso'] = "✅ E-mail confirmado com sucesso! Faça login para continuar.";
         } else {
-            $_SESSION['erro'] = "❌ Token inválido ou expirado. <a href='".PUBLIC_PATH."/reenviar-confirmacao.php'>Reenviar link</a>";
+            $_SESSION['erro'] = "❌ Token inválido. <a href='".PUBLIC_PATH."/reenviar-confirmacao.php'>Reenviar link</a>";
         }
     } catch (Exception $e) {
         $_SESSION['erro'] = "⚠️ Erro ao confirmar e-mail: " . $e->getMessage();
