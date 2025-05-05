@@ -1,0 +1,84 @@
+/* cores predefinidas por variavel */
+:root {
+    --cor-primaria: #4e73df;
+    --cor-secundaria: #2e59d9;
+    --cor-texto: #2d3748;
+    --cor-fundo: #f8f9fa;
+    --sombra-padrao: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --borda-arredondada: 8px;
+}
+
+/* Reset básico para consistência entre navegadores */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--cor-fundo);
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.6;
+    color: var(--cor-texto);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Container de autenticação */
+.auth-container {
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+    padding: 2rem;
+    background: white;
+    border-radius: var(--borda-arredondada);
+    box-shadow: var(--sombra-padrao);
+}
+
+/* Botões personalizados */
+.btn-custom {
+    background-color: var(--cor-primaria);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn-custom:hover {
+    background-color: var(--cor-secundaria);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-custom:active {
+    transform: translateY(0);
+}
+
+.link-custom {
+    color: var(--cor-primaria);
+    transition: color 0.3s;
+}
+
+/*responsividade */
+@media (max-width: 576px) {
+    .auth-container {
+        margin: 2rem auto;
+        padding: 1.5rem;
+        box-shadow: none;
+        border: 1px solid #e2e8f0;
+    }
+}
+
+/* Efeito de transição para elementos dinâmicos */
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

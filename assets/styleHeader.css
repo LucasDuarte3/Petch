@@ -1,0 +1,26 @@
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  background-color: #f1f1f1;
+  color: #003366;
+}
+
+.topbar {
+  background-color: #0047a0;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+}
+.logo {
+  font-weight: bold;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.menu, .user-icon {
+  font-size: 1rem;
+}

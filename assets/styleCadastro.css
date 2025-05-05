@@ -1,0 +1,265 @@
+/* CSS Reset e Configurações Gerais */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+
+
+.container {
+    width: 70%;
+    max-width: 1366px;
+    margin: 0 auto;
+
+}
+
+
+
+
+
+
+
+/* Layout Principal */
+.split-layout {
+    display: flex;
+    /*height: 100vh; /* Usar height em vez de min-height */
+   /*lign-items: stretch;*/
+    width: 100%;
+   
+
+}
+
+/* Coluna de Imagens (Esquerda) */
+.alternate-column {
+    /* flex: 1.5; */
+    background: #f8f9fa;
+    padding: 0; /* Removido padding para imagens se tocarem */
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    gap: 0; /* Removido gap entre itens */
+}
+
+.alternate-item {
+    display: flex;
+    align-items: stretch;
+    min-height: calc(16.666% - 1px); /* Divide em 6 itens iguais */
+    position: relative;
+}
+
+.alternate-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: rgba(0,0,0,0.1);
+}
+
+.alternate-item.reverse {
+    flex-direction: row-reverse;
+}
+
+.alternate-image {
+    flex: 1;
+    width:50%;
+
+    overflow: hidden;
+    position: relative;
+}
+
+.alternate-image img {
+    width:100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    
+}
+
+.alternate-text {
+    width:50%;
+    /* flex: 1; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: #f8f9fa;
+}
+
+.alternate-text h3 {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    text-transform: uppercase;
+}
+
+/* Coluna do Formulário (Direita) */
+.form-column {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: white;
+    overflow-y: auto; /* Permite rolagem apenas no formulário se necessário */
+    height: 80%; /* Garante que a coluna do formulário ocupe toda a altura da tela */
+    width: 60%;
+
+}
+
+/*.auth-container {
+    width: 100%;
+    height: 80%;
+    max-width: 500px;
+    padding: 1.5rem;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}*/
+    
+
+.auth-container h1 {
+    color: #2c3e50;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+/* Estilos do Formulário */
+.form-label {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.form-control:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.btn-custom {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.btn-custom:hover {
+    background-color: #2980b9;
+}
+
+.link-custom {
+    color: #3498db;
+    transition: color 0.3s;
+}
+
+.link-custom:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+/* Mensagens de Alerta */
+.alert {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+/* Efeitos */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsividade */
+@media (max-width: 1200px) {
+    .split-layout {
+        flex-direction: column;
+    }
+    
+    .alternate-column, 
+    .form-column {
+        flex: 1;
+        padding: 2rem;
+    }
+    
+    .auth-container {
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .alternate-column, 
+    .form-column {
+        padding: 1.5rem;
+    }
+    
+    .auth-container {
+        padding: 1.5rem;
+    }
+    
+    .alternate-item,
+    .alternate-item.reverse {
+        flex-direction: column;
+        min-height: auto;
+    }
+    
+    .alternate-image {
+        height: 200px;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
