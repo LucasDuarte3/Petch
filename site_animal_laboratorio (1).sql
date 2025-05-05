@@ -1,4 +1,3 @@
-
 USE site_animal;
 
 -- Usuários (administradores e usuários comuns)
@@ -76,3 +75,5 @@ SELECT * FROM animais ORDER BY data_cadastro DESC;
 CREATE INDEX idx_especie ON animais(especie);
 CREATE INDEX idx_porte ON animais(porte);
 CREATE INDEX idx_localidade ON animais(localidade);
+ALTER TABLE usuarios DROP COLUMN token_expira;
+
