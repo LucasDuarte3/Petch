@@ -83,7 +83,10 @@ ADD COLUMN token_verificacao VARCHAR(32) NULL,
 ADD COLUMN verificado TINYINT(1) DEFAULT 0;
 alter table usuarios add column token_reset varchar(255) default null;
 alter table usuarios modify token_verificacao varchar(32) not null;
+DELETE FROM usuarios WHERE id > 0;
+ALTER TABLE usuarios MODIFY token_verificacao VARCHAR(64) NOT NULL;
 
 SELECT * FROM usuarios;
+
 
 

@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
             'senha' => $_POST['senha'],
             'telefone' => $_POST['telefone'] ?? null,
             'endereco' => $_POST['endereco'] ?? null,
-            'cpf_cnpj' => $_POST['cpf_cnpj'] ?? null,
+            'cpf_cnpj' => $_POST['cpf'] ?? $_POST['cnpj'] ?? null,
             'tipo' => 'usuario', // Tipo de usuário (pode ser 'usuario' ou 'admin')
             'token_verificacao' => bin2hex(random_bytes(32)), // Verificação de e-mail
             'token_reset' => null, // Só será preenchido quando o usuário solicitar
