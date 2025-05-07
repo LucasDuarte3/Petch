@@ -144,6 +144,15 @@ class User {
         $stmt->execute([$documento]);
         return (bool) $stmt->fetch();
     }
+    
+    /**
+    * Busca usuário por ID
+    */
+    public function getById($id) {
+        $stmt = $this->pdo->prepare("SELECT * FROM usuarios WHERE id = :id");
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 
     /**
      * Gera token para redefinição de senha
