@@ -15,83 +15,115 @@ if (isset($_SESSION['sucesso'])) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro - Petch</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="<?= ASSETS_PATH ?>/style.css">
+  <meta charset="UTF-8">
+  <title>Divulgação do Animal - Petch</title>
+  <link rel="stylesheet" href="<?= ASSETS_PATH ?>/FormDivulgacao.css">
 </head>
 <body>
-<!-- formulario de cadastro -->
-    <div class="auth-container fade-in">
-        <h1 class="text-center mb-4">Cadastre seu animal</h1>
-        <form action="<?= CONTROLLERS_PATH ?>/AnimalController.php" method="POST">
-            <input type="hidden" name="acao" value="cadastrar_animal">
-            
-            <div class="mb-3">
-                <label class="form-label">Nome Completo*:</label>
-                <input type="text" name="nome" class="form-control" required>
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label">Espécie*:</label>
-                <input type="text" name="especie" class="form-control" required>
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label">Raça:</label>
-                <input type="text" name="raca" class="form-control">
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label">Idade:</label>
-                <input type="number" name="idade" class="form-control">
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label">Porte*:</label>
-                <input type="text" name="porte" class="form-control" required>
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label">Descricao:</label>
-                <input type="text" name="descricao" class="form-control">
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label">Histórico Médico:</label>
-                <input type="text" name="historico_medico" class="form-control">
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label">Status*:</label>
-                <select name="status" class="form-select" aria-label="Default select example" required>
-                    <option value = "">-</option>
-                    <option value="disponivel">Disponível para adoção</option>
-                    <option value="em_processo">Em processo de adoção</option>
-                    <option value="adotado">Adotado</option>
-                </select>
-            </div>
 
-            <div class="mb-3">
-                <label class="form-label">Caminho do arquivo da foto:</label>
-                <input type="text" name="caminho_foto" class="form-control">
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Localidade:</label>
-                <input type="text" name="localidade" class="form-control">
-            </div>
-
-            <div class="d-grid gap-2">
-                <button type="submit" class="btn-custom">Cadastrar</button>
-            </div>
-
-        </form>
+  <!-- Topo -->
+  <header class="topbar">
+    <div class="logo">
+      <img src="logo-petch.png" alt="Petch">
     </div>
+    <div class="menu">Quem somos</div>
+    <div class="user-icon">👤</div>
+  </header>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <!-- Formulário -->
+  <main class="container">
+    <h1>Olá, usuário!</h1>
+    <p class="subtitle">Responsável pelo animal</p>
+
+    <p><strong style="color: #0047a0;">Faça uma divulgação do animal aqui:</strong></p>
+
+    <form method="POST" action="/divulgar-animal" enctype="multipart/form-data">
+      <label>Nome do animal:*<br>
+        <input type="text" name="nome_animal" placeholder="Nome do animal" required>
+      </label>
+
+      <label>Espécie:*<br>
+        <select name="especie" required>
+          <option value="">Selecione a espécie</option>
+          <option value="Cachorro">Cachorro</option>
+          <option value="Gato">Gato</option>
+        </select>
+      </label>
+
+      <label>Raça:*<br>
+           <input type="text" name="raca" required>
+          <!-- Inserir dinamicamente -->
+        </select>
+      </label>
+
+      <label>Idade:*<br>
+        <input type="text" name="idade" placeholder="Idade" required>
+      </label>
+
+      <label>Porte:*<br>
+        <select name="porte" required>
+          <option value="">Selecione o porte</option>
+          <option value="Pequeno">Pequeno</option>
+          <option value="Médio">Médio</option>
+          <option value="Grande">Grande</option>
+        </select>
+      </label>
+
+      <label>Foto:*<br>
+        <input type="file" name="foto" required>
+      </label>
+
+      <label>Histórico médico:</label>
+<table>
+  <tr>
+    <td>
+      <label>
+        <input type="checkbox" name="historico_medico[]" value="Castrado"> Castrado
+      </label>
+    </td>
+    <td>
+      <label>
+        <input type="checkbox" name="historico_medico[]" value="Vacinado"> Vacinado
+      </label>
+    </td>
+    <td>
+      <label>
+        <input type="checkbox" name="historico_medico[]" value="Vermifugado"> Vermifugado
+      </label>
+    </td>
+    <td>
+      <label>
+        <input type="checkbox" name="historico_medico[]" value="Doenças crônicas"> Doenças crônicas
+      </label>
+    </td>
+  </tr>
+</table>
+
+
+      <label>Descrição de comportamento / necessidades especiais e outras informações importantes:*<br>
+        <textarea name="descricao" placeholder="Comportamento / necessidades especiais / histórico médico." required></textarea>
+      </label>
+
+      <label>Status:*<br>
+        <select name="status" required>
+          <option value="">Selecione o status</option>
+          <option value="Disponível">Disponível</option>
+          <option value="Em adoção">Em processo de adoção</option>
+          <option value="Adotado">Adotado</option>
+        </select>
+      </label>
+
+      <button type="submit">Publicar</button>
+    </form>
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="footer">
+    <img src="logo-petch.png" alt="Petch">
+    <p>Todos os direitos reservados</p>
+  </footer>
+
 </body>
 </html>

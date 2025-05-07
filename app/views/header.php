@@ -25,7 +25,8 @@ if (isset($_SESSION['sucesso'])) {
     <header class="topbar">
         <div class="logo">❤️ Petch</div>
         <div class="menu">Quem somos</div>
-        <div class="user-icon">👤</div>
+        <div class="user-icon"><a href="<?= BASE_PATH ?>/public/perfil.php">👤</a></div>
+      
     </header>
 </body>
 </html>

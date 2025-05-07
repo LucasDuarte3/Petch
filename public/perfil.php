@@ -47,7 +47,6 @@ $usuario = $userModel->getById($_SESSION['usuario']['id']);
       <div class="avatar"></div>
       <div class="info">
       <h2><?= htmlspecialchars($usuario ['nome']) ?></h2>
-        <p><?= htmlspecialchars($usuario ['endereco']) ?></p>
         <p>CPF: <?= htmlspecialchars($usuario ['cpf_cnpj']) ?></p>
         <p>E-mail: <?= htmlspecialchars($usuario ['email']) ?></p>
         <p>Telefone: <?= htmlspecialchars($usuario ['telefone']) ?> <span class="edit">✏️</span></p>
