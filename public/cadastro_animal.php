@@ -13,6 +13,14 @@ if (isset($_SESSION['sucesso'])) {
     echo '<div class="alert alert-success">' . htmlspecialchars($_SESSION['sucesso']) . '</div>';
     unset($_SESSION['sucesso']);
 }
+// Importa o banco e o model de usuários
+require_once dirname(__DIR__) . '/config/database.php';
+require_once dirname(__DIR__) . '/app/models/User.php';
+
+// Busca os dados do usuário logado
+$userModel = new User($pdo);
+$usuario = $userModel->getById($_SESSION['usuario']['id']);
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -34,7 +42,8 @@ if (isset($_SESSION['sucesso'])) {
 
   <!-- Formulário -->
   <main class="container">
-    <h1>Olá, usuário!</h1>
+ 
+  <h1>Olá, <?= htmlspecialchars($usuario['nome']) ?>!</h1>
     <p class="subtitle">Responsável pelo animal</p>
 
     <p><strong style="color: #0047a0;">Faça uma divulgação do animal aqui:</strong></p>
@@ -95,25 +104,29 @@ if (isset($_SESSION['sucesso'])) {
     </td>
     <td>
       <label>
-        <input type="checkbox" name="historico_medico[]" value="Doenças crônicas"> Doenças crônicas
+        <input type="checkbox" id="doencasCheckbox" name="historico_medico[]" value="Doenças crônicas"> Doenças crônicas
       </label>
+    </td>
+  </tr>
+  <tr id="linhaDoencas" style="display: none;">
+    <td colspan="4">
+      <label>Descreva as doenças crônicas:</label><br>
+      <textarea name="descricao_doencas" rows="3" style="width: 100%;" placeholder="Ex: diabetes, doença cardíaca, etc."></textarea>
     </td>
   </tr>
 </table>
 
+<script>
+  const doencasCheckbox = document.getElementById('doencasCheckbox');
+  const linhaDoencas = document.getElementById('linhaDoencas');
 
-      <label>Descrição de comportamento / necessidades especiais e outras informações importantes:*<br>
-        <textarea name="descricao" placeholder="Comportamento / necessidades especiais / histórico médico." required></textarea>
-      </label>
-
-      <label>Status:*<br>
-        <select name="status" required>
-          <option value="">Selecione o status</option>
-          <option value="Disponível">Disponível</option>
-          <option value="Em adoção">Em processo de adoção</option>
-          <option value="Adotado">Adotado</option>
-        </select>
-      </label>
+  doencasCheckbox.addEventListener('change', function () {
+    linhaDoencas.style.display = this.checked ? 'table-row' : 'none';
+  });
+</script>
+  </tr>
+  </table>
+         
 
       <button type="submit">Publicar</button>
     </form>
