@@ -7,16 +7,18 @@ class Animal{
         $this->pdo = $pdo;
     }
 
-    public function create($nome, $especie, $porte, $localidade, $status, $raca = null, $idade = null, $historico_medico = null, $caminho_foto=null, $usuario=null, $descricao=null) {
+    public function create($nome, $especie, $raca = null, $idade = null, $porte, $historico_medico = null, $caminho_foto = null, $usuario = null, $localidade = null, $doencas_cronicas = null, $comportamento = null) {
         try {
-            $data_cadastro = $data_cadastro ?? date('Y-m-d H:i:s');
-            $sql = "INSERT INTO animais (nome, especie, raca, idade, porte, descricao, historico_medico, status, caminho_foto, usuario_id, localidade, data_cadastro) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+            $sql = "INSERT INTO animais (nome, especie, raca, idade, porte, historico_medico, caminho_foto, 
+                    usuario_id, localidade, doencas_cronicas, comportamento) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
             $stmt = $this->pdo->prepare($sql);
-            return $stmt->execute([$nome, $especie, $raca, $idade, $porte, $descricao, $historico_medico, $status, $caminho_foto, $usuario, $localidade, $data_cadastro]);
-            
+            return $stmt->execute([
+                $nome, $especie, $raca, $idade, $porte, $historico_medico, $caminho_foto,
+                $usuario, $localidade, $doencas_cronicas, $comportamento
+            ]);
         } catch (PDOException $e) {
-            error_log("Erro no cadastro do animal: " . $e->getMessage());            
+            error_log("Erro no cadastro do animal: " . $e->getMessage());
             return false;
         }
     }

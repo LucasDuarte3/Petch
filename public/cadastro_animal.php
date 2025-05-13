@@ -48,7 +48,7 @@ $usuario = $userModel->getById($_SESSION['usuario']['id']);
 
     <p><strong style="color: #0047a0;">Faça uma divulgação do animal aqui:</strong></p>
 
-    <form method="POST" action="/divulgar-animal" enctype="multipart/form-data">
+    <form method="POST" action="confirmacao.php" enctype="multipart/form-data">
       <label>Nome do animal:*<br>
         <input type="text" name="nome_animal" placeholder="Nome do animal" required>
       </label>
@@ -115,7 +115,9 @@ $usuario = $userModel->getById($_SESSION['usuario']['id']);
     </td>
   </tr>
 </table>
-
+  <label>Descrição de comportamento / necessidades especiais e outras informações importantes:*<br>
+        <textarea name="descricao" placeholder="Comportamento / necessidades especiais / histórico médico." required></textarea>
+      </label>
 <script>
   const doencasCheckbox = document.getElementById('doencasCheckbox');
   const linhaDoencas = document.getElementById('linhaDoencas');
