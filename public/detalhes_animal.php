@@ -43,7 +43,7 @@ try {
 <body>
   <div><?php require ROOT_PATH . '/app/views/header.php'; ?></div>
   <main class="container py-5">
-    <a href="index.php" class="btn btn-secondary mb-4">&larr; Voltar</a>
+    <a href="<?=BASE_PATH?>/index.php" class="btn btn-secondary mb-4">&larr; Voltar</a>
     <div class="card mx-auto" style="max-width: 600px;">
       <?php if (!empty($animal['foto_blob'])): ?>
         <?php $base64 = base64_encode($animal['foto_blob']); ?>
