@@ -1,6 +1,7 @@
 <?php
-require_once __DIR__ . '/../../config.php'; // Importa routes.php
+require_once __DIR__ . '/../config.php'; // Importa routes.php
 // Inicia a sessão apenas se ainda não estiver ativa
+session_start();
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }

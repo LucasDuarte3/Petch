@@ -3,63 +3,74 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-// Carrega configuração global (rotas, constantes)
+// Carrega configuração global (rotas, caminhos)
 require_once __DIR__ . '/../../config.php';
 
-// Inicia sessão se ainda não estiver ativa
+// Inicia sessão
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Carrega conexão com banco
+// Conexão com banco
 require_once dirname(__DIR__) . '/../config/database.php';
 
 // Processa submissão de cadastro
 if (
     $_SERVER['REQUEST_METHOD'] === 'POST'
-    && isset($_POST['acao'])
-    && $_POST['acao'] === 'cadastrar_animal'
+    && ($_POST['acao'] ?? '') === 'cadastrar_animal'
 ) {
-    // Recupera dados confirmados da sessão
+    // Dados da confirmação
     $conf = $_SESSION['animal_confirmation'] ?? [];
-    $nome               = $conf['nome']               ?? '';
-    $especie            = $conf['especie']            ?? '';
-    $raca               = $conf['raca']               ?? '';
-    $idade              = $conf['idade']              ?? null;
-    $porte              = $conf['porte']              ?? '';
-    // Ajuste: localidade e status passam string vazia, pois no form básico
-    $localidade         = $conf['localidade']         ?? '';
-    $historico_medico   = $conf['historico_medico']   ?? null;
-    $doencas_cronicas   = $conf['doencas']            ?? null;
-    $comportamento      = $conf['descricao']          ?? null;
-    $caminho_foto       = $conf['foto_path']          ?? null;
-    $usuario_id         = $_SESSION['usuario']['id']   ?? null;
+
+    $nome             = $conf['nome']             ?? '';
+    $especie          = $conf['especie']          ?? '';
+    $raca             = $conf['raca']             ?? '';
+    $idade            = $conf['idade']            ?? null;
+    $porte            = $conf['porte']            ?? '';
+    $historico_medico = $conf['historico_medico'] ?? null;
+    $doencas_cronicas = $conf['doencas']          ?? null;
+    $comportamento    = $conf['descricao']        ?? null;
+    $fotoPath         = $conf['foto_path']        ?? '';
+    $usuario_id       = $_SESSION['usuario']['id'] ?? null;
+
+    // Lê binário da imagem
+    $fotoData = null;
+    if ($fotoPath && file_exists($fotoPath)) {
+        $fotoData = file_get_contents($fotoPath);
+    }
 
     try {
+        // Insere registro usando BLOB para a foto
         $sql = "INSERT INTO animais
             (nome, especie, raca, idade, porte,
-             localidade, 
              historico_medico, doencas_cronicas, comportamento,
-             caminho_foto, usuario_id)
-            VALUES
+             foto_blob, usuario_id)
+         VALUES
             (:nome, :especie, :raca, :idade, :porte,
-             :localidade, 
              :historico_medico, :doencas_cronicas, :comportamento,
-             :caminho_foto, :usuario_id)";
+             :foto_blob, :usuario_id)";
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([
-            ':nome'              => $nome,
-            ':especie'           => $especie,
-            ':raca'              => $raca,
-            ':idade'             => $idade,
-            ':porte'             => $porte,
-            ':localidade'        => $localidade,
-            ':historico_medico'  => $historico_medico,
-            ':doencas_cronicas'  => $doencas_cronicas,
-            ':comportamento'     => $comportamento,
-            ':caminho_foto'      => $caminho_foto,
-            ':usuario_id'        => $usuario_id,
-        ]);
+        $stmt->bindParam(':nome',              $nome);
+        $stmt->bindParam(':especie',           $especie);
+        $stmt->bindParam(':raca',              $raca);
+        $stmt->bindParam(':idade',             $idade);
+        $stmt->bindParam(':porte',             $porte);
+        $stmt->bindParam(':historico_medico',  $historico_medico);
+        $stmt->bindParam(':doencas_cronicas',  $doencas_cronicas);
+        $stmt->bindParam(':comportamento',     $comportamento);
+        $stmt->bindParam(':foto_blob',         $fotoData, PDO::PARAM_LOB);
+        $stmt->bindParam(':usuario_id',        $usuario_id);
+        $stmt->execute();
+
+        // Remove temporário
+        if ($fotoPath && file_exists($fotoPath)) {
+            unlink($fotoPath);
+            $tmpDir = dirname($fotoPath);
+            if (is_dir($tmpDir) && count(scandir($tmpDir)) === 2) {
+                rmdir($tmpDir);
+            }
+        }
+
         $_SESSION['sucesso'] = 'Cadastro realizado com sucesso!';
         header('Location: ' . ADMIN_PATH . '/dashboard.php');
         exit;
@@ -68,3 +79,4 @@ if (
         exit;
     }
 }
+?>

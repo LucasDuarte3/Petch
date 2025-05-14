@@ -30,14 +30,10 @@ $usuario = $userModel->getById($_SESSION['usuario']['id']);
   <link rel="stylesheet" href="<?= ASSETS_PATH ?>/FormDivulgacao.css">
 </head>
 <body>
-
+  <header>
   <!-- Topo -->
-  <header class="topbar">
-    <div class="logo">
-      <img src="logo-petch.png" alt="Petch">
-    </div>
-    <div class="menu">Quem somos</div>
-    <div class="user-icon">👤</div>
+<div><?php require ROOT_PATH . '/app/views/header.php'; ?></div>
+  
   </header>
 
   <!-- Formulário -->

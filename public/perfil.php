@@ -32,21 +32,17 @@ $usuario = $userModel->getById($_SESSION['usuario']['id']);
 </head>
 <body>
 
-  <header>
-    <h1>Petch</h1>
-    <div><img src="https://via.placeholder.com/40" alt="avatar" style="border-radius:50%;"></div>
-  </header>
-
+<div><?php require ROOT_PATH . '/app/views/header.php'; ?></div>
   <main class="container">
     <!-- <div class="alert">✔️ Usuário atualizado com sucesso</div>-->
 
-    <div class="breadcrumb">Home / <?= htmlspecialchars($usuario ['nome']) ?></div>
+    <div class="breadcrumb"><a href="<?= BASE_PATH ?>/index.php">🏠</a></div>
 
 
     <div class="profile">
       <div class="avatar"></div>
       <div class="info">
-      <h2><?= htmlspecialchars($usuario ['nome']) ?></h2>
+      <h2>Olá, <?= htmlspecialchars($usuario ['nome']) ?></h2>
         <p>CPF: <?= htmlspecialchars($usuario ['cpf_cnpj']) ?></p>
         <p>E-mail: <?= htmlspecialchars($usuario ['email']) ?></p>
         <p>Telefone: <?= htmlspecialchars($usuario ['telefone']) ?> <span class="edit">✏️</span></p>

@@ -90,3 +90,5 @@ SELECT * FROM usuarios;
 
 
 
+ALTER TABLE animais
+DROP COLUMN localidade;

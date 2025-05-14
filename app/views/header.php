@@ -21,12 +21,18 @@ if (isset($_SESSION['sucesso'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?= ASSETS_PATH ?>/styleHeader.css">
 </head>
-<body>
+<body>  
     <header class="topbar">
-        <div class="logo">❤️ Petch</div>
-        <div class="menu">Quem somos</div>
-        <div class="user-icon"><a href="<?= BASE_PATH ?>/public/perfil.php">👤</a></div>
-      
+       <div class="logo">
+         <a href="<?= BASE_PATH ?>/index.php">❤️ Petch</a>
+       </div>
+       <div class="menu">Quem somos</div>
+       <div class="user-icon">
+         <a href="<?= BASE_PATH ?>/public/perfil.php">👤</a>
+       </div>
+       <?php if (isset($_SESSION['usuario'])): ?>
+         <div class="logout-icon">
+           <a href="<?= BASE_PATH ?>/public/logout.php">Logout</a>
+         </div>
+       <?php endif; ?>
     </header>
-</body>
-</html>
