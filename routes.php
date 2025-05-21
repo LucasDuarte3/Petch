@@ -49,7 +49,9 @@ if (in_array($file_extension, STATIC_EXTENSIONS)) {
 $publicRoutes = [
     '/' => 'index.php', // Corrigido para apontar para a raiz
     '/public/login' => 'public/login.php',
-    '/public/cadastro' => 'public/cadastro.php'
+    '/public/cadastro' => 'public/cadastro.php',
+    '/consulta_animal' => 'public/consulta_animal.php',
+    '/form_adocao' => 'public/form_adocao.php'
 ];
 
 // Rotas de API/Controllers
@@ -57,16 +59,26 @@ $apiRoutes = [
     '/auth' => 'app/controllers/AuthController.php',
     '/user' => 'app/controllers/UserController.php',
     '/mail' => 'app/controllers/MailController.php',
-    '/modelUser' => 'app/models/User.php',
-    '/modelMail' => 'app/models/UserMail.php',
-    '/service' => 'app/service/MailService.php'
+    '/service' => 'app/service/MailService.php',
+    '/animal' => 'app/controllers/AnimalController.php',
+    '/consulta_animal' => 'app/controllers/ConsultarAnimalController.php',
+    '/password_reset' => 'app/controllers/PasswordResetController.php'
 ];
 
 // Rotas Administrativas
 $adminRoutes = [
-    '/admin/dashboard' => 'admin/dashboard.php'
+    '/admin/dashboard' => 'admin/dashboard.php',
+    '/admin/controller' => 'admin/controllers/AdminController.php',
+    '/admin/models' => 'admin/models/Admin.php',
 ];
 
+// Models (para requisições específicas)
+$modelRoutes = [
+    '/model/user' => 'app/models/User.php',
+    '/model/animal' => 'app/models/Animal.php',
+    '/model/adocao' => 'app/models/Adocao.php',
+    '/modelMail' => 'app/models/UserMail.php',
+];
 // Processamento das Rotas
 try {
     // Verifica rotas públicas
