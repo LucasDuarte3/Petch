@@ -34,5 +34,35 @@ class Animal{
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function deletarAnimal($id){
+        $sql = "DELETE FROM animais WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$id]);
+    }
+    public function atualizarAnimal($id, $dados) {
+        $sql = "UPDATE animais SET 
+                    nome = ?, 
+                    especie = ?, 
+                    raca = ?, 
+                    idade = ?, 
+                    porte = ?, 
+                    descricao = ?, 
+                    historico_medico = ?, 
+                    status = ?, 
+                    caminho_foto = ?, 
+                    usuario_id = ?, 
+                    localidade = ?, 
+                    data_cadastro = ? 
+                WHERE id = ?";
+        
+        $stmt = $this->pdo->prepare($sql);
+        
+        // Adiciona o ID ao final do array para corresponder aos placeholders
+        $dados[] = $id;
+        
+        return $stmt->execute(array_values($dados)); 
+        
+    }
 }
 ?>
