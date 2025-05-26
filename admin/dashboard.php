@@ -6,6 +6,7 @@ require_once ROOT_PATH . '/admin/controller/AdminController.php';
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
 if (isset($_SESSION['erro'])) {
     echo '<div class="alert alert-danger">' . htmlspecialchars($_SESSION['erro']) . '</div>';
     unset($_SESSION['erro']);
@@ -14,11 +15,12 @@ if (isset($_SESSION['sucesso'])) {
     echo '<div class="alert alert-success">' . htmlspecialchars($_SESSION['sucesso']) . '</div>';
     unset($_SESSION['sucesso']);
 }
+
 // Verifica se é admin
-//if (empty($_SESSION['usuario']) || $_SESSION['usuario']['tipo'] !== 'admin') {
-//    header("Location: " . PUBLIC_PATH . "/login.php");
-//    exit;
-//} 
+// if (empty($_SESSION['usuario']) || $_SESSION['usuario']['tipo'] !== 'admin') {
+//     header("Location: " . PUBLIC_PATH . "/login.php");
+//     exit;
+// }
 
 $adminModel = new Admin($pdo);
 $totalUsuarios = $adminModel->countUsers();
@@ -37,34 +39,32 @@ $totalAnimais = $adminModel->countAnimals();
     <link href="<?= ASSETS_PATH ?>/dashboard.css" rel="stylesheet">
 </head>
 <body>
-    <div class="dashboard-container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="logo">
-                <img src="<?= IMG_PATH ?>/logo.png" alt="Logo"> <!-- colocar logo aqui -->
-                <span>Administrador</span>
-            </div>
-            <nav>
-                <ul>
-                    <li class="active"><a href="#"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
-                    <li><a href="<?= ADMIN_PATH ?>?page=usuarios">Usuários</a></li>
-                    <li><a href="<?= ADMIN_PATH ?>?page=animais">Animais</a></li>
-                    <li><a href="<?= ADMIN_PATH ?>?page=adocoes">Adoções</a></li>
-                </ul>
-            </nav>
+<div class="dashboard-container">
+    <div class="sidebar">
+        <div class="logo">
+            <img src="<?= IMG_PATH ?>/logo.png" alt="Logo">
+            <span>Administrador</span>
         </div>
+        <nav>
+            <ul>
+                <li><a href="#" onclick="mostrarView('dashboard')"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                <li><a href="#" onclick="mostrarView('usuarios')">Usuários</a></li>
+                <li><a href="#" onclick="mostrarView('animais')">Animais</a></li>
+                <li><a href="#" onclick="mostrarView('adocoes')">Adoções</a></li>
+            </ul>
+        </nav>
+    </div>
 
-        <!-- Main Content -->
-        <div class="main-content">
+    <div class="main-content">
+        <div id="dashboard-view" class="view active">
             <header>
                 <h1>Painel Administrativo</h1>
                 <div class="user-info">
                     <span>Bem-vindo, Lucas</span>
-                    <img src="<?= IMG_PATH ?>/#" alt="User"> <!-- colocar img do avatar -->
+                    <img src="<?= IMG_PATH ?>/#" alt="User">
                 </div>
             </header>
 
-            <!-- Stats Cards -->
             <div class="stats-container">
                 <div class="stat-card">
                     <div class="stat-icon bg-primary">
@@ -89,47 +89,35 @@ $totalAnimais = $adminModel->countAnimals();
                         <i class="bi bi-file-earmark-check"></i>
                     </div>
                     <div class="stat-info">
-                        <h3>aqui vai ficar o total de adoções</h3>
-                        <p>puxar a variável</p>
-                        <!--<h3><?= $totalAdocoes ?></h3>-->
+                        <h3><?= $totalAdocoes ?></h3>
                         <p>Solicitações de Adoção</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Search Section -->
             <div class="search-section">
                 <h2><i class="bi bi-search"></i> Busca Avançada</h2>
-                <form action="<?= ADMIN_PATH ?>/admin/controller" method="post">
+                <form action="<?= APP_PATH ?>/model/user" method="post">
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label>CPF</label>
-                                <input type="text" name="cpf" class="form-control" placeholder="Digite o CPF">
-                            </div>
-                            <div class="form-group">
-                                <label>Nome do usuário</label>
-                                <input type="text" name="nome_usuario" class="form-control" placeholder="Nome completo">
-                            </div>
+                            <label>CPF</label>
+                            <input type="text" name="cpf" class="form-control" placeholder="Digite o CPF">
+                            <label>Nome do usuário</label>
+                            <input type="text" name="nome_usuario" class="form-control" placeholder="Nome completo">
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label>E-mail do usuário</label>
-                                <input type="email" name="email" class="form-control" placeholder="E-mail cadastrado">
-                            </div>
-                            <div class="form-group">
-                                <label>Nome do animal</label>
-                                <input type="text" name="nome_animal" class="form-control" placeholder="Nome do animal">
-                            </div>
+                            <label>E-mail do usuário</label>
+                            <input type="email" name="email" class="form-control" placeholder="E-mail cadastrado">
+                            <label>Nome do animal</label>
+                            <input type="text" name="nome_animal" class="form-control" placeholder="Nome do animal">
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary mt-3">
                         <i class="bi bi-search"></i> Buscar
                     </button>
                 </form>
             </div>
 
-            <!-- Pending Requests -->
             <div class="requests-section">
                 <h2><i class="bi bi-list-check"></i> Solicitações Pendentes</h2>
                 <div class="table-responsive">
@@ -144,7 +132,7 @@ $totalAnimais = $adminModel->countAnimals();
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($solicitacoes as $solicitacao): ?>  <!-- aqui ta com erro -->
+                            <?php foreach ($solicitacoes as $solicitacao): ?>
                             <tr>
                                 <td><?= $solicitacao['id'] ?></td>
                                 <td><?= $solicitacao['usuario_nome'] ?></td>
@@ -173,28 +161,58 @@ $totalAnimais = $adminModel->countAnimals();
                     </table>
                 </div>
             </div>
-            <!-- Gráficos -->
+
             <div class="charts-section">
                 <div class="chart-container">
                     <h3><i class="bi bi-bar-chart"></i> Status de Adoções</h3>
                     <canvas id="adoptionStatsChart"></canvas>
                 </div>
-                
                 <div class="chart-container">
                     <h3><i class="bi bi-graph-up"></i> Crescimento de Usuários</h3>
                     <canvas id="userGrowthChart"></canvas>
                 </div>
-                
                 <div class="chart-container">
                     <h3><i class="bi bi-pie-chart"></i> Tipos de Animais</h3>
                     <canvas id="animalTypesChart"></canvas>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="<?= ADMIN_PATH ?>/js/dashboard.js"></script>
+        <div id="usuarios-view" class="view">
+            <h2>Gestão de Usuários</h2>
+            <p>Aqui você pode listar, bloquear e excluir usuários.</p>
+        </div>
+
+        <div id="animais-view" class="view">
+            <h2>Gestão de Animais</h2>
+            <p>Aqui você pode listar e excluir animais.</p>
+        </div>
+
+        <div id="adocoes-view" class="view">
+            <h2>Gestão de Adoções</h2>
+            <p>Aqui você pode visualizar, aprovar ou recusar adoções.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+function mostrarView(view) {
+    const views = ['dashboard', 'usuarios', 'animais', 'adocoes'];
+    views.forEach(v => {
+        const div = document.getElementById(v + '-view');
+        if (div) {
+            div.classList.remove('active');
+        }
+    });
+    const ativa = document.getElementById(view + '-view');
+    if (ativa) {
+        ativa.classList.add('active');
+    }
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="<?= JS_PATH ?>/js/dashboard.js"></script>
 </body>
 </html>
