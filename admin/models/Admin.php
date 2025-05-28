@@ -1,24 +1,67 @@
 <?php
-class Admin {
+class Admin
+{
     private $pdo;
 
-    public function __construct(PDO $pdo) {
+    public function __construct(PDO $pdo)
+    {
         $this->pdo = $pdo;
+    }
+    public function countAdoptions()
+    {
+        $sql = "SELECT COUNT(*) as total FROM historico_adocoes";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row['total'];
+    }
+    public function listAdoptions($filtros = [])
+    {
+        $sql = "SELECT sa.id, 
+                   sa.usuario_id, 
+                   sa.animal_id, 
+                   sa.status, 
+                   sa.data_solicitacao,
+                   u.nome AS usuario_nome, 
+                   a.nome AS animal_nome
+            FROM solicitacoes_adocao sa
+            JOIN usuarios u ON sa.usuario_id = u.id
+            JOIN animais a ON sa.animal_id = a.id";
+
+        $where = [];
+        $params = [];
+
+        if (isset($filtros['status'])) {
+            $where[] = "sa.status = :status";
+            $params[':status'] = $filtros['status'];
+        }
+
+        if ($where) {
+            $sql .= " WHERE " . implode(" AND ", $where);
+        }
+        $sql .= " ORDER BY sa.data_solicitacao DESC";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // Usuários
-    public function toggleUserStatus($userId, $status) {
+    public function toggleUserStatus($userId, $status)
+    {
         $stmt = $this->pdo->prepare("UPDATE usuarios SET ativo = ? WHERE id = ?");
         return $stmt->execute([$status, $userId]);
     }
 
-    public function deleteUser($userId) {
+    public function deleteUser($userId)
+    {
         // Antes de deletar, podemos mover para uma tabela de usuários excluídos
         $stmt = $this->pdo->prepare("DELETE FROM usuarios WHERE id = ?");
         return $stmt->execute([$userId]);
     }
 
-    public function listUsers($filters = []) {
+    public function listUsers($filters = [])
+    {
         $sql = "SELECT * FROM usuarios WHERE 1=1";
         $params = [];
 
@@ -39,12 +82,14 @@ class Admin {
     }
 
     // Animais
-    public function deleteAnimal($animalId) {
+    public function deleteAnimal($animalId)
+    {
         $stmt = $this->pdo->prepare("DELETE FROM animais WHERE id = ?");
         return $stmt->execute([$animalId]);
     }
 
-    public function listAnimals($filters = []) {
+    public function listAnimals($filters = [])
+    {
         $sql = "SELECT a.*, u.nome as dono_nome FROM animais a 
                 LEFT JOIN usuarios u ON a.usuario_id = u.id WHERE 1=1";
         $params = [];
@@ -65,23 +110,24 @@ class Admin {
     }
 
     // Adoções
-    public function approveAdoption($adocaoId, $animalId) {
+    public function approveAdoption($adocaoId, $animalId)
+    {
         $this->pdo->beginTransaction();
         try {
             // 1. Atualiza status da solicitação
             $stmt = $this->pdo->prepare("UPDATE solicitacoes_adocao SET status = 'aprovado' WHERE id = ?");
             $stmt->execute([$adocaoId]);
-            
+
             // 2. Atualiza status do animal
             $stmt = $this->pdo->prepare("UPDATE animais SET status = 'adotado' WHERE id = ?");
             $stmt->execute([$animalId]);
-            
+
             // 3. Registra no histórico
             $solicitacao = $this->pdo->query("SELECT usuario_id, animal_id FROM solicitacoes_adocao WHERE id = $adocaoId")->fetch();
-            
+
             $stmt = $this->pdo->prepare("INSERT INTO historico_adocoes (usuario_id, animal_id) VALUES (?, ?)");
             $stmt->execute([$solicitacao['usuario_id'], $solicitacao['animal_id']]);
-            
+
             $this->pdo->commit();
             return true;
         } catch (Exception $e) {
@@ -90,12 +136,14 @@ class Admin {
         }
     }
 
-    public function rejectAdoption($adocaoId) {
+    public function rejectAdoption($adocaoId)
+    {
         $stmt = $this->pdo->prepare("UPDATE solicitacoes_adocao SET status = 'negado' WHERE id = ?");
         return $stmt->execute([$adocaoId]);
     }
 
-    public function cleanOldAdoptions($days) {
+    public function cleanOldAdoptions($days)
+    {
         $stmt = $this->pdo->prepare("DELETE FROM solicitacoes_adocao WHERE status = 'pendente' AND data_solicitacao < DATE_SUB(NOW(), INTERVAL ? DAY)");
         return $stmt->execute([$days]);
     }
@@ -107,34 +155,38 @@ class Admin {
     //            LEFT JOIN usuarios u ON f.usuario_id = u.id
     //            WHERE 1=1";
     //    $params = [];
-//
+    //
     //    if (!empty($filters['status'])) {
     //        $sql .= " AND f.status = ?";
     //        $params[] = $filters['status'];
     //    }
-//
-     //   $stmt = $this->pdo->prepare($sql);
-     //   $stmt->execute($params);
-     //   return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    //
+    //   $stmt = $this->pdo->prepare($sql);
+    //   $stmt->execute($params);
+    //   return $stmt->fetchAll(PDO::FETCH_ASSOC);
     //}
 
     // Relatórios
-    public function countUsers() {
+    public function countUsers()
+    {
         $stmt = $this->pdo->query("SELECT COUNT(*) FROM usuarios");
         return $stmt->fetchColumn();
     }
 
-    public function countActiveUsers() {
+    public function countActiveUsers()
+    {
         $stmt = $this->pdo->query("SELECT COUNT(*) FROM usuarios WHERE ativo = 1");
         return $stmt->fetchColumn();
     }
 
-    public function countAnimals() {
+    public function countAnimals()
+    {
         $stmt = $this->pdo->query("SELECT COUNT(*) FROM animais");
         return $stmt->fetchColumn();
     }
 
-    public function countAvailableAnimals() {
+    public function countAvailableAnimals()
+    {
         $stmt = $this->pdo->query("SELECT COUNT(*) FROM animais WHERE adotado = 0");
         return $stmt->fetchColumn();
     }
@@ -149,12 +201,14 @@ class Admin {
     //    return $stmt->fetchColumn();
     //}
 
-    public function countPendingAdoptions() {
+    public function countPendingAdoptions()
+    {
         $stmt = $this->pdo->query("SELECT COUNT(*) FROM solicitacoes_adocao WHERE status = 'pendente'");
         return $stmt->fetchColumn();
     }
 
-    public function getMonthlyUserGrowth() {
+    public function getMonthlyUserGrowth()
+    {
         $stmt = $this->pdo->query("SELECT 
             MONTH(data_cadastro) as mes, 
             COUNT(*) as total 
@@ -165,9 +219,9 @@ class Admin {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function countAnimalsByType() {
+    public function countAnimalsByType()
+    {
         $stmt = $this->pdo->query("SELECT especie, COUNT(*) as total FROM animais GROUP BY especie");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
-?>

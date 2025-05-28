@@ -25,27 +25,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 labels: ['Aprovadas', 'Pendentes', 'Recusadas'],
                 datasets: [{
                     label: 'Adoções',
-                    data: [12, 7, 3],
+                    data: [
+                        dadosAdocoes.aprovadas,
+                        dadosAdocoes.pendentes,
+                        dadosAdocoes.recusadas
+                    ],
                     backgroundColor: ['#28a745', '#ffc107', '#dc3545']
                 }]
             }
         });
     }
 
-    if (userGrowthCtx) {
-        new Chart(userGrowthCtx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
-                datasets: [{
-                    label: 'Novos Usuários',
-                    data: [5, 10, 15, 20, 25, 30],
-                    borderColor: '#007bff',
-                    fill: false
-                }]
-            }
-        });
-    }
+    // ... (mantém o gráfico de usuários como está)
 
     if (animalTypesCtx) {
         new Chart(animalTypesCtx, {
@@ -53,7 +44,11 @@ document.addEventListener('DOMContentLoaded', function() {
             data: {
                 labels: ['Cães', 'Gatos', 'Outros'],
                 datasets: [{
-                    data: [60, 30, 10],
+                    data: [
+                        tiposAnimais.caes,
+                        tiposAnimais.gatos,
+                        tiposAnimais.outros
+                    ],
                     backgroundColor: ['#007bff', '#ffc107', '#28a745']
                 }]
             }

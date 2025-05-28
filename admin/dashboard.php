@@ -25,8 +25,27 @@ if (isset($_SESSION['sucesso'])) {
 $adminModel = new Admin($pdo);
 $totalUsuarios = $adminModel->countUsers();
 $totalAnimais = $adminModel->countAnimals();
-//$totalAdocoes = $adminModel->countAdoptions();
-//$solicitacoes = $adminModel->listAdoptions(['status' => 'pendente']);
+$totalAdocoes = $adminModel->countAdoptions();
+$solicitacoes = $adminModel->listAdoptions(['status' => 'pendente']);
+
+$stmt = $pdo->query("SELECT status, COUNT(*) as total FROM solicitacoes_adocao GROUP BY status");
+$adocoesStatus = [];
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $adocoesStatus[$row['status']] = $row['total'];
+}
+$adocoesAprovadas = $adocoesStatus['aprovado'] ?? 0;
+$adocoesPendentes = $adocoesStatus['pendente'] ?? 0;
+$adocoesRecusadas = $adocoesStatus['negado'] ?? 0;
+
+$stmt = $pdo->query("SELECT especie, COUNT(*) as total FROM animais GROUP BY especie");
+$tiposAnimais = [];
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $tiposAnimais[$row['especie']] = $row['total'];
+}
+$caes = $tiposAnimais['cachorro'] ?? 0;
+$gatos = $tiposAnimais['gato'] ?? 0;
+$outros = array_sum($tiposAnimais) - $caes - $gatos;
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -196,23 +215,21 @@ $totalAnimais = $adminModel->countAnimals();
 </div>
 
 <script>
-function mostrarView(view) {
-    const views = ['dashboard', 'usuarios', 'animais', 'adocoes'];
-    views.forEach(v => {
-        const div = document.getElementById(v + '-view');
-        if (div) {
-            div.classList.remove('active');
-        }
-    });
-    const ativa = document.getElementById(view + '-view');
-    if (ativa) {
-        ativa.classList.add('active');
-    }
-}
+    // Variáveis globais vindas do PHP para o JS
+    const dadosAdocoes = {
+        aprovadas: <?= $adocoesAprovadas ?>,
+        pendentes: <?= $adocoesPendentes ?>,
+        recusadas: <?= $adocoesRecusadas ?>
+    };
+    const tiposAnimais = {
+        caes: <?= $caes ?>,
+        gatos: <?= $gatos ?>,
+        outros: <?= $outros ?>
+    };
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="<?= JS_PATH ?>/js/dashboard.js"></script>
+<script src="<?= JS_PATH ?>/dashboard.js"></script>
 </body>
 </html>
