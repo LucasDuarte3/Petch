@@ -75,6 +75,7 @@ $animaisPendentes = $adminModel->listPendingAnimals();
                 <li><a href="#" onclick="mostrarView('dashboard')"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
                 <li><a href="#" onclick="mostrarView('usuarios')">Usuários</a></li>
                 <li><a href="#" onclick="mostrarView('animais')">Animais</a></li>
+                <li><a href="#" onclick="mostrarView('animais-pendentes')">Anúncios Pendentes</a></li>
                 <li><a href="#" onclick="mostrarView('adocoes')">Adoções</a></li>
             </ul>
         </nav>

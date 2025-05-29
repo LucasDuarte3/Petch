@@ -1,5 +1,5 @@
 function mostrarView(view) {
-    const views = ['dashboard', 'usuarios', 'animais', 'adocoes'];
+    const views = ['dashboard', 'usuarios', 'animais', 'adocoes', 'animais-pendentes'];
     views.forEach(v => {
         const div = document.getElementById(v + '-view');
         if (div) {

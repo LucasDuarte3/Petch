@@ -217,15 +217,12 @@ class Admin
     }
     public function listPendingAnimals()
 {
-    $sql = "SELECT a.id, a.nome, a.especie, a.raca, a.porte, u.nome as dono_nome
-            FROM animais a
-            LEFT JOIN usuarios u ON a.usuario_id = u.id
-            WHERE a.status = 'aguardando'
-            ORDER BY a.id DESC";
+    $sql = "SELECT * FROM animais WHERE status = 'aguardando' ORDER BY id DESC";
     $stmt = $this->pdo->prepare($sql);
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 
     public function countAnimalsByType()
     {
