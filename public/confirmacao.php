@@ -137,5 +137,6 @@ $chronicDiseaseDesc = $diseaseDesc;
       <a href="<?= PUBLIC_PATH ?>/cadastro_animal.php" class="btn btn-secondary">Voltar e Editar</a>
     </form>
   </main>
+  
 </body>
 </html>

@@ -64,6 +64,7 @@ $animaisPendentes = $adminModel->listPendingAnimals();
     <link href="<?= ASSETS_PATH ?>/dashboard.css" rel="stylesheet">
 </head>
 <body>
+    <div><?php require BASE_PATH . '/app/views/alert.php'; ?></div>
 <div class="dashboard-container">
     <div class="sidebar">
         <div class="logo">
@@ -283,16 +284,20 @@ $animaisPendentes = $adminModel->listPendingAnimals();
                 <td><?= htmlspecialchars($animal['porte']) ?></td>
                 <td><?= htmlspecialchars($animal['dono_nome']) ?></td>
                 <td>
-                    <form action="caminho_do_seu_controller.php" method="post" style="display:inline;">
-                        <input type="hidden" name="acao" value="aprovar_animal">
-                        <input type="hidden" name="animal_id" value="<?= $animal['id'] ?>">
-                        <button type="submit" class="btn btn-success btn-sm">Aprovar</button>
-                    </form>
-                    <form action="caminho_do_seu_controller.php" method="post" style="display:inline;">
-                        <input type="hidden" name="acao" value="rejeitar_animal">
-                        <input type="hidden" name="animal_id" value="<?= $animal['id'] ?>">
-                        <button type="submit" class="btn btn-danger btn-sm">Recusar</button>
-                    </form>
+                    <form action="<?= ADMIN_PATH ?>/controller/AdminController.php" method="post" style="display:inline;">
+    <input type="hidden" name="acao" value="aprovar_animal">
+    <input type="hidden" name="animal_id" value="<?= $animal['id'] ?>">
+    <input type="hidden" name="redirect" value="dashboard">
+    <button type="submit" class="btn btn-success btn-sm">Aprovar</button>
+</form>
+
+<form action="<?= ADMIN_PATH ?>/controller/AdminController.php" method="post" style="display:inline;">
+    <input type="hidden" name="acao" value="rejeitar_animal">
+    <input type="hidden" name="animal_id" value="<?= $animal['id'] ?>">
+    <input type="hidden" name="redirect" value="dashboard">
+    <button type="submit" class="btn btn-danger btn-sm">Recusar</button>
+</form>
+
                 </td>
             </tr>
             <?php endforeach; ?>

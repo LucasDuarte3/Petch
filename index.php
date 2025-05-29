@@ -5,7 +5,10 @@ require_once __DIR__ . '/config/database.php';
 
 try {
     // Busca todos os animais ordenados por mais recentes
-    $stmt = $pdo->query("SELECT id, nome, especie, raca, idade, porte, descricao, foto_blob FROM animais ORDER BY id DESC");
+    $stmt = $pdo->query("SELECT id, nome, especie, raca, idade, porte, descricao, foto_blob 
+                     FROM animais 
+                     WHERE status = 'disponível'
+                     ORDER BY id DESC");
     $animais = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     die('Erro ao carregar animais: ' . htmlspecialchars($e->getMessage()));

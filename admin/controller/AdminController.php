@@ -40,15 +40,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao'])) {
                 $_SESSION['sucesso'] = "Usuário excluído com sucesso!";
                 break;
                 
-            case 'aprovar_adocao':
-                $adminModel->approveAdoption($_POST['adocao_id'], $_POST['animal_id']);
-                $_SESSION['sucesso'] = "Adoção aprovada com sucesso!";
-                break;
-                
-            case 'recusar_adocao':
-                $adminModel->rejectAdoption($_POST['adocao_id']);
-                $_SESSION['sucesso'] = "Adoção recusada com sucesso!";
-                break;
+            case 'aprovar_animal':
+    $adminModel->approveAnimal($_POST['animal_id']);
+    $_SESSION['sucesso'] = "Anúncio aprovado!";
+    break;
+case 'rejeitar_animal':
+    $adminModel->rejectAnimal($_POST['animal_id']);
+    $_SESSION['sucesso'] = "Anúncio recusado/removido!";
+    break;
+
                 
             case 'excluir_animal':
                 $adminModel->deleteAnimal($_POST['animal_id']);
@@ -61,11 +61,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao'])) {
                 break;
         }
         
-        header("Location: " . ADMIN_PATH . "/" . $_POST['redirect'] . ".php");
+     $redirect = $_POST['redirect'] ?? 'dashboard';
+        header("Location: " . ADMIN_PATH . "/" . $redirect . ".php");
         exit;
     } catch (Exception $e) {
         $_SESSION['erro'] = $e->getMessage();
-        header("Location: " . ADMIN_PATH . "/" . $_POST['redirect'] . ".php");
+        $redirect = $_POST['redirect'] ?? 'dashboard';
+        header("Location: " . ADMIN_PATH . "/" . $redirect . ".php");
         exit;
     }
 }
@@ -96,4 +98,5 @@ if ($_GET['relatorio'] ?? '' === 'data') {
     ]);
     exit;
 }
+
 ?>
