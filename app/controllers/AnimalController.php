@@ -1,4 +1,5 @@
 <?php
+
 // Ativa exibição de erros para debug
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
@@ -39,28 +40,32 @@ if (
         $fotoData = file_get_contents($fotoPath);
     }
 
-    try {
-        // Insere registro usando BLOB para a foto
-        $sql = "INSERT INTO animais
-            (nome, especie, raca, idade, porte,
-             historico_medico, doencas_cronicas, comportamento,
-             foto_blob, usuario_id)
-         VALUES
-            (:nome, :especie, :raca, :idade, :porte,
-             :historico_medico, :doencas_cronicas, :comportamento,
-             :foto_blob, :usuario_id)";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':nome',              $nome);
-        $stmt->bindParam(':especie',           $especie);
-        $stmt->bindParam(':raca',              $raca);
-        $stmt->bindParam(':idade',             $idade);
-        $stmt->bindParam(':porte',             $porte);
-        $stmt->bindParam(':historico_medico',  $historico_medico);
-        $stmt->bindParam(':doencas_cronicas',  $doencas_cronicas);
-        $stmt->bindParam(':comportamento',     $comportamento);
-        $stmt->bindParam(':foto_blob',         $fotoData, PDO::PARAM_LOB);
-        $stmt->bindParam(':usuario_id',        $usuario_id);
-        $stmt->execute();
+   try {
+    $status = 'aguardando';
+    $sql = "INSERT INTO animais
+        (nome, especie, raca, idade, porte,
+         historico_medico, doencas_cronicas, comportamento,
+         foto_blob, usuario_id, status)
+     VALUES
+        (:nome, :especie, :raca, :idade, :porte,
+         :historico_medico, :doencas_cronicas, :comportamento,
+         :foto_blob, :usuario_id, :status)";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':nome',              $nome);
+    $stmt->bindParam(':especie',           $especie);
+    $stmt->bindParam(':raca',              $raca);
+    $stmt->bindParam(':idade',             $idade);
+    $stmt->bindParam(':porte',             $porte);
+    $stmt->bindParam(':historico_medico',  $historico_medico);
+    $stmt->bindParam(':doencas_cronicas',  $doencas_cronicas);
+    $stmt->bindParam(':comportamento',     $comportamento);
+    $stmt->bindParam(':foto_blob',         $fotoData, PDO::PARAM_LOB);
+    $stmt->bindParam(':usuario_id',        $usuario_id);
+    $stmt->bindParam(':status',            $status);
+    $stmt->execute();
+
+    // ...restante igual...
+
 
         // Remove temporário
         if ($fotoPath && file_exists($fotoPath)) {
@@ -78,5 +83,14 @@ if (
         echo '<pre>Erro de banco de dados: ' . htmlspecialchars($e->getMessage()) . '</pre>';
         exit;
     }
+    if ($_POST['acao'] === 'aprovar_animal') {
+    $adminModel->approveAnimal($_POST['animal_id']);
+    // Redireciona com sucesso
+}
+if ($_POST['acao'] === 'rejeitar_animal') {
+    $adminModel->rejectAnimal($_POST['animal_id']);
+    // Redireciona com sucesso
+}
+
 }
 ?>

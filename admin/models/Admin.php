@@ -215,11 +215,33 @@ class Admin
             ORDER BY mes");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function listPendingAnimals()
+{
+    $sql = "SELECT a.id, a.nome, a.especie, a.raca, a.porte, u.nome as dono_nome
+            FROM animais a
+            LEFT JOIN usuarios u ON a.usuario_id = u.id
+            WHERE a.status = 'aguardando'
+            ORDER BY a.id DESC";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
     public function countAnimalsByType()
     {
         $stmt = $this->pdo->query("SELECT especie, COUNT(*) as total FROM animais GROUP BY especie");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
+    public function approveAnimal($animalId)
+{
+    $stmt = $this->pdo->prepare("UPDATE animais SET status = 'disponível' WHERE id = ?");
+    return $stmt->execute([$animalId]);
+}
+
+public function rejectAnimal($animalId)
+{
+    $stmt = $this->pdo->prepare("DELETE FROM animais WHERE id = ?");
+    return $stmt->execute([$animalId]);
+}
+
 }

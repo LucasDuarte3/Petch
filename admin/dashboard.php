@@ -49,6 +49,7 @@ $outros = array_sum($tiposAnimais) - $caes - $gatos;
 $usuarios = $adminModel->listUsers();
 $animais = $adminModel->listAnimals();
 $adocoes = $adminModel->listAdoptions();
+$animaisPendentes = $adminModel->listPendingAnimals();
 
 
 ?>
@@ -262,6 +263,40 @@ $adocoes = $adminModel->listAdoptions();
             </tbody>
         </table>
     </div>
+</div>
+<div id="animais-pendentes-view" class="view">
+    <h2>Anúncios Pendentes de Aprovação</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th><th>Nome</th><th>Espécie</th><th>Raça</th><th>Porte</th><th>Dono</th><th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($animaisPendentes as $animal): ?>
+            <tr>
+                <td><?= $animal['id'] ?></td>
+                <td><?= htmlspecialchars($animal['nome']) ?></td>
+                <td><?= htmlspecialchars($animal['especie']) ?></td>
+                <td><?= htmlspecialchars($animal['raca']) ?></td>
+                <td><?= htmlspecialchars($animal['porte']) ?></td>
+                <td><?= htmlspecialchars($animal['dono_nome']) ?></td>
+                <td>
+                    <form action="caminho_do_seu_controller.php" method="post" style="display:inline;">
+                        <input type="hidden" name="acao" value="aprovar_animal">
+                        <input type="hidden" name="animal_id" value="<?= $animal['id'] ?>">
+                        <button type="submit" class="btn btn-success btn-sm">Aprovar</button>
+                    </form>
+                    <form action="caminho_do_seu_controller.php" method="post" style="display:inline;">
+                        <input type="hidden" name="acao" value="rejeitar_animal">
+                        <input type="hidden" name="animal_id" value="<?= $animal['id'] ?>">
+                        <button type="submit" class="btn btn-danger btn-sm">Recusar</button>
+                    </form>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
 </div>
 
 
