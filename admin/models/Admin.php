@@ -15,36 +15,28 @@ class Admin
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row['total'];
     }
-    public function listAdoptions($filtros = [])
-    {
-        $sql = "SELECT sa.id, 
-                   sa.usuario_id, 
-                   sa.animal_id, 
-                   sa.status, 
-                   sa.data_solicitacao,
-                   u.nome AS usuario_nome, 
+    public function listAdoptions($filters = [])
+{
+    $sql = "SELECT sa.id, sa.status, sa.data_solicitacao,
+                   u.nome AS usuario_nome,
                    a.nome AS animal_nome
             FROM solicitacoes_adocao sa
             JOIN usuarios u ON sa.usuario_id = u.id
-            JOIN animais a ON sa.animal_id = a.id";
+            JOIN animais a ON sa.animal_id = a.id
+            WHERE 1=1";
+    $params = [];
 
-        $where = [];
-        $params = [];
-
-        if (isset($filtros['status'])) {
-            $where[] = "sa.status = :status";
-            $params[':status'] = $filtros['status'];
-        }
-
-        if ($where) {
-            $sql .= " WHERE " . implode(" AND ", $where);
-        }
-        $sql .= " ORDER BY sa.data_solicitacao DESC";
-
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($params);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if (isset($filters['status'])) {
+        $sql .= " AND sa.status = ?";
+        $params[] = $filters['status'];
     }
+
+    $sql .= " ORDER BY sa.id DESC";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute($params);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 
     // Usuários
     public function toggleUserStatus($userId, $status)
@@ -89,25 +81,30 @@ class Admin
     }
 
     public function listAnimals($filters = [])
-    {
-        $sql = "SELECT a.*, u.nome as dono_nome FROM animais a 
-                LEFT JOIN usuarios u ON a.usuario_id = u.id WHERE 1=1";
-        $params = [];
+{
+    $sql = "SELECT a.id, a.nome, a.especie, a.raca, a.idade, a.porte, a.status, u.nome as dono_nome
+            FROM animais a
+            LEFT JOIN usuarios u ON a.usuario_id = u.id
+            WHERE 1=1";
+    $params = [];
 
-        if (!empty($filters['search'])) {
-            $sql .= " AND (a.nome LIKE ? OR a.especie LIKE ?)";
-            $params[] = '%' . $filters['search'] . '%';
-            $params[] = '%' . $filters['search'] . '%';
-        }
-
-        if (!empty($filters['disponivel'])) {
-            $sql .= " AND a.adotado = 0";
-        }
-
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($params);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if (!empty($filters['search'])) {
+        $sql .= " AND (a.nome LIKE ? OR a.raca LIKE ?)";
+        $params[] = '%' . $filters['search'] . '%';
+        $params[] = '%' . $filters['search'] . '%';
     }
+
+    if (isset($filters['status'])) {
+        $sql .= " AND a.status = ?";
+        $params[] = $filters['status'];
+    }
+
+    $sql .= " ORDER BY a.id DESC";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute($params);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 
     // Adoções
     public function approveAdoption($adocaoId, $animalId)
@@ -224,4 +221,5 @@ class Admin
         $stmt = $this->pdo->query("SELECT especie, COUNT(*) as total FROM animais GROUP BY especie");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
 }

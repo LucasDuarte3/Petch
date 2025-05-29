@@ -46,6 +46,11 @@ $caes = $tiposAnimais['cachorro'] ?? 0;
 $gatos = $tiposAnimais['gato'] ?? 0;
 $outros = array_sum($tiposAnimais) - $caes - $gatos;
 
+$usuarios = $adminModel->listUsers();
+$animais = $adminModel->listAnimals();
+$adocoes = $adminModel->listAdoptions();
+
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -196,21 +201,98 @@ $outros = array_sum($tiposAnimais) - $caes - $gatos;
                 </div>
             </div>
         </div>
+<div id="usuarios-view" class="view">
+    <h2>Gestão de Usuários</h2>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
+                    <th>Tipo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($usuarios as $usuario): ?>
+                <tr>
+                    <td><?= htmlspecialchars($usuario['id']) ?></td>
+                    <td><?= htmlspecialchars($usuario['nome']) ?></td>
+                    <td><?= htmlspecialchars($usuario['email']) ?></td>
+                    <td><?= htmlspecialchars($usuario['telefone']) ?></td>
+                    <td><?= htmlspecialchars($usuario['tipo']) ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
 
-        <div id="usuarios-view" class="view">
-            <h2>Gestão de Usuários</h2>
-            <p>Aqui você pode listar, bloquear e excluir usuários.</p>
-        </div>
 
         <div id="animais-view" class="view">
-            <h2>Gestão de Animais</h2>
-            <p>Aqui você pode listar e excluir animais.</p>
-        </div>
+    <h2>Gestão de Animais</h2>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Espécie</th>
+                    <th>Raça</th>
+                    <th>Idade</th>
+                    <th>Porte</th>
+                    <th>Status</th>
+                    <th>Dono</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($animais as $animal): ?>
+                <tr>
+                    <td><?= htmlspecialchars($animal['id']) ?></td>
+                    <td><?= htmlspecialchars($animal['nome']) ?></td>
+                    <td><?= htmlspecialchars($animal['especie']) ?></td>
+                    <td><?= htmlspecialchars($animal['raca']) ?></td>
+                    <td><?= htmlspecialchars($animal['idade']) ?></td>
+                    <td><?= htmlspecialchars($animal['porte']) ?></td>
+                    <td><?= htmlspecialchars($animal['status']) ?></td>
+                    <td><?= htmlspecialchars($animal['dono_nome']) ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
 
         <div id="adocoes-view" class="view">
-            <h2>Gestão de Adoções</h2>
-            <p>Aqui você pode visualizar, aprovar ou recusar adoções.</p>
-        </div>
+    <h2>Gestão de Adoções</h2>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Usuário</th>
+                    <th>Animal</th>
+                    <th>Status</th>
+                    <th>Data da Solicitação</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($adocoes as $adocao): ?>
+                <tr>
+                    <td><?= htmlspecialchars($adocao['id']) ?></td>
+                    <td><?= htmlspecialchars($adocao['usuario_nome']) ?></td>
+                    <td><?= htmlspecialchars($adocao['animal_nome']) ?></td>
+                    <td><?= htmlspecialchars($adocao['status']) ?></td>
+                    <td><?= date('d/m/Y', strtotime($adocao['data_solicitacao'])) ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
     </div>
 </div>
 
