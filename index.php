@@ -4,7 +4,10 @@ require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/config/database.php';
 
 try {
-    // Busca todos os animais ordenados por mais recentes
+    // Antes: exibia todos os animais, independente do status
+// $stmt = $pdo->query("SELECT id, nome, especie, raca, idade, porte, descricao, foto_blob FROM animais ORDER BY id DESC");
+
+// Agora: só traz animais disponíveis (aprovados pelo admin)
     $stmt = $pdo->query("SELECT id, nome, especie, raca, idade, porte, descricao, foto_blob 
                      FROM animais 
                      WHERE status = 'disponível'

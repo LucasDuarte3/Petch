@@ -22,13 +22,13 @@ if (isset($_SESSION['sucesso'])) {
 //     exit;
 // }
 
-$adminModel = new Admin($pdo);
+$adminModel = new Admin($pdo);// Instanciamos o Admin model pra usar as funções de contagem, listagem, etc
 $totalUsuarios = $adminModel->countUsers();
 $totalAnimais = $adminModel->countAnimals();
 $totalAdocoes = $adminModel->countAdoptions();
 $solicitacoes = $adminModel->listAdoptions(['status' => 'pendente']);
 
-$stmt = $pdo->query("SELECT status, COUNT(*) as total FROM solicitacoes_adocao GROUP BY status");
+$stmt = $pdo->query("SELECT status, COUNT(*) as total FROM solicitacoes_adocao GROUP BY status");// Preparamos dados de status das adoções, pra mostrar nos gráficos do dashboard
 $adocoesStatus = [];
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $adocoesStatus[$row['status']] = $row['total'];
@@ -37,7 +37,8 @@ $adocoesAprovadas = $adocoesStatus['aprovado'] ?? 0;
 $adocoesPendentes = $adocoesStatus['pendente'] ?? 0;
 $adocoesRecusadas = $adocoesStatus['negado'] ?? 0;
 
-$stmt = $pdo->query("SELECT especie, COUNT(*) as total FROM animais GROUP BY especie");
+$stmt = $pdo->query("SELECT especie, COUNT(*) as total FROM animais GROUP BY especie"); 
+// Isso é só pra separar cachorro, gato e outros pros gráficos
 $tiposAnimais = [];
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $tiposAnimais[$row['especie']] = $row['total'];
@@ -46,10 +47,18 @@ $caes = $tiposAnimais['cachorro'] ?? 0;
 $gatos = $tiposAnimais['gato'] ?? 0;
 $outros = array_sum($tiposAnimais) - $caes - $gatos;
 
+// Listagens que vão preencher as tabelas das views (usuários, animais, adoções, anúncios pendentes)
+
 $usuarios = $adminModel->listUsers();
 $animais = $adminModel->listAnimals();
 $adocoes = $adminModel->listAdoptions();
-$animaisPendentes = $adminModel->listPendingAnimals();
+$animaisPendentes = $adminModel->listPendingAnimals();// Aqui está a lista de animais que ainda estão aguardando aprovação do admin
+
+// Novidades principais que a gente fez, pra lembrar:
+// - Agora, quando alguém cadastra um animal, ele não aparece direto no index, só depois do admin aprovar.
+// - Admin vê a lista dos “anúncios pendentes” e pode aprovar (coloca status = ‘disponível’) ou recusar (deleta).
+// - Tudo que admin faz (aprovar/rejeitar) aparece na tela aquela barrinha verde/vermelha lá em cima (mensagem de sucesso/erro).
+// - Painel de admin agora mostra também gráficos e relatórios em tempo real, puxando esses dados acima.
 
 
 ?>

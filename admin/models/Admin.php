@@ -79,7 +79,7 @@ class Admin
         $stmt = $this->pdo->prepare("DELETE FROM animais WHERE id = ?");
         return $stmt->execute([$animalId]);
     }
-
+   // Parte de listagem dos animais agora inclui o dono, pois fizemos um LEFT JOIN na tabela de usuários.
     public function listAnimals($filters = [])
 {
     $sql = "SELECT a.id, a.nome, a.especie, a.raca, a.idade, a.porte, a.status, u.nome as dono_nome
@@ -215,6 +215,8 @@ class Admin
             ORDER BY mes");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+ // Listagem exclusiva de anúncios "aguardando" para aparecer só na view do admin
     public function listPendingAnimals()
 {
     $sql = "SELECT a.*, u.nome as dono_nome
@@ -233,8 +235,12 @@ class Admin
         $stmt = $this->pdo->query("SELECT especie, COUNT(*) as total FROM animais GROUP BY especie");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
+    // ---------- ALTERAÇÃO PARA GERENCIAR ANÚNCIOS PENDENTES DO ADMIN ----------
+    // Agora o admin pode aprovar (muda status pra disponível) ou rejeitar (deleta)
 public function approveAnimal($animalId)
 {
+    // Se aprovar, só troca status pra "disponível"
     $sql = "UPDATE animais SET status = 'disponível' WHERE id = ?";
     $stmt = $this->pdo->prepare($sql);
     return $stmt->execute([$animalId]);
@@ -243,6 +249,7 @@ public function approveAnimal($animalId)
 
 public function rejectAnimal($animalId)
 {
+    // Se recusar, deleta o animal do banco (não volta mais pro index)
     $sql = "DELETE FROM animais WHERE id = ?";
     $stmt = $this->pdo->prepare($sql);
     return $stmt->execute([$animalId]);

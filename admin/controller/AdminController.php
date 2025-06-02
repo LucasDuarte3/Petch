@@ -29,39 +29,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao'])) {
                 $adminModel->toggleUserStatus($_POST['user_id'], 0);
                 $_SESSION['sucesso'] = "Usuário bloqueado com sucesso!";
                 break;
-                
+
             case 'desbloquear_usuario':
                 $adminModel->toggleUserStatus($_POST['user_id'], 1);
                 $_SESSION['sucesso'] = "Usuário desbloqueado com sucesso!";
                 break;
-                
+
             case 'excluir_usuario':
                 $adminModel->deleteUser($_POST['user_id']);
                 $_SESSION['sucesso'] = "Usuário excluído com sucesso!";
                 break;
-                
-            case 'aprovar_animal':
-    $adminModel->approveAnimal($_POST['animal_id']);
-    $_SESSION['sucesso'] = "Anúncio aprovado!";
-    break;
-case 'rejeitar_animal':
-    $adminModel->rejectAnimal($_POST['animal_id']);
-    $_SESSION['sucesso'] = "Anúncio recusado/removido!";
-    break;
 
-                
+            // ---- ADICIONAMOS ESSA PARTE PARA GERENCIAR ANÚNCIOS ----
+
+            case 'aprovar_animal':
+                // Chama o método do model pra aprovar (status = disponível)
+                $adminModel->approveAnimal($_POST['animal_id']);
+                $_SESSION['sucesso'] = "Anúncio aprovado!";
+                break;
+            case 'rejeitar_animal':
+                 // Chama o método do model pra remover (deletar do banco)
+                $adminModel->rejectAnimal($_POST['animal_id']);
+                $_SESSION['sucesso'] = "Anúncio recusado/removido!";
+                break;
+
+
             case 'excluir_animal':
                 $adminModel->deleteAnimal($_POST['animal_id']);
                 $_SESSION['sucesso'] = "Animal excluído com sucesso!";
                 break;
-                
+
             case 'limpar_adocoes_antigas':
                 $adminModel->cleanOldAdoptions(30); // 30 dias
                 $_SESSION['sucesso'] = "Adoções antigas removidas com sucesso!";
                 break;
         }
-        
-     $redirect = $_POST['redirect'] ?? 'dashboard';
+        // Redirecionamento padronizado (mantido igual aos outros cases)
+        $redirect = $_POST['redirect'] ?? 'dashboard';
         header("Location: " . ADMIN_PATH . "/" . $redirect . ".php");
         exit;
     } catch (Exception $e) {
@@ -98,5 +102,3 @@ if ($_GET['relatorio'] ?? '' === 'data') {
     ]);
     exit;
 }
-
-?>
