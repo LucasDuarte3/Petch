@@ -12,15 +12,45 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
+  height: 80px;
 }
 .logo {
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
+.logo-link {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 10px; /* Espaçamento interno */
+  transition: opacity 0.3s;
+}
 
-.menu, .user-icon {
-  font-size: 1rem;
+.menu {
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.menu:hover {
+  background-color: rgba(255,255,255,0.1);
+}
+.user-icon a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(255,255,255,0.1);
+  transition: background-color 0.3s;
+}
+
+.user-icon a:hover {
+  background-color: rgba(255,255,255,0.2);
 }

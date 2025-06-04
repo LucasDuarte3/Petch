@@ -24,7 +24,7 @@ if (isset($_SESSION['sucesso'])) {
 <body>  
     <header class="topbar">
        <div class="logo">
-         <a href="<?= BASE_PATH ?>/index.php">❤️ Petch</a>
+         <a href="<?= BASE_PATH ?>/index.php" class="logo-link">❤️ Petch</a>
        </div>
        <div class="menu">Quem somos</div>
        <div class="user-icon">
@@ -36,3 +36,5 @@ if (isset($_SESSION['sucesso'])) {
          </div>
        <?php endif; ?>
     </header>
+</body>
+</html>
