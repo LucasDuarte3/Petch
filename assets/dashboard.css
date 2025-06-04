@@ -67,7 +67,19 @@ header .user-info img {
     border-radius: 50%;
     margin-left: 10px;
 }
-
+.logo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    flex-direction: column;
+}
+#LogoAdmin{
+    width: 100px;
+    height: auto;
+    margin-bottom: 10px;
+    border-radius: 50%;
+}
 /* Stats */
 .stats-container {
     display: flex;

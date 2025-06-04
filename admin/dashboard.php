@@ -73,11 +73,10 @@ $animaisPendentes = $adminModel->listPendingAnimals();// Aqui está a lista de a
     <link href="<?= ASSETS_PATH ?>/dashboard.css" rel="stylesheet">
 </head>
 <body>
-    <div><?php require BASE_PATH . '/app/views/alert.php'; ?></div>
 <div class="dashboard-container">
     <div class="sidebar">
         <div class="logo">
-            <img src="<?= IMG_PATH ?>/logo.png" alt="Logo">
+            <img id="LogoAdmin" src="<?= IMG_PATH ?>/AvatarF.png" alt="Logo">
             <span>Administrador</span>
         </div>
         <nav>
@@ -97,7 +96,7 @@ $animaisPendentes = $adminModel->listPendingAnimals();// Aqui está a lista de a
                 <h1>Painel Administrativo</h1>
                 <div class="user-info">
                     <span>Bem-vindo, Lucas</span>
-                    <img src="<?= IMG_PATH ?>/#" alt="User">
+                    <img src="<?= IMG_PATH ?>/Avatar.png" alt="User">
                 </div>
             </header>
 
