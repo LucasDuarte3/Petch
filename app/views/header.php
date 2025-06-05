@@ -26,13 +26,10 @@ if (isset($_SESSION['sucesso'])) {
        <div class="logo">
          <a href="<?= BASE_PATH ?>/index.php" class="logo-link">❤️ Petch</a>
        </div>
-       <div class="menu">Quem somos</div>
-       <div class="user-icon">
-         <a href="<?= BASE_PATH ?>/public/perfil.php">👤</a>
-       </div>
        <?php if (isset($_SESSION['usuario'])): ?>
          <div class="logout-icon">
-           <a href="<?= BASE_PATH ?>/public/logout.php">Logout</a>
+          <a href="<?= BASE_PATH ?>/public/perfil.php" class="user-icon">👤</a>
+          <a href="<?= BASE_PATH ?>/public/logout.php" class="icon">Logout</a>
          </div>
        <?php endif; ?>
     </header>

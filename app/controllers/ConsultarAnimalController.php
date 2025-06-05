@@ -9,7 +9,9 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once dirname(__DIR__) . '/../config/database.php'; // Configuração do banco
 require_once dirname(__DIR__) . '/../app/models/Animal.php'; // Classe Animal
 
-
+$animalModel = new Animal($pdo);
+$animaisDivulgados = $animalModel->countAnimaisDivulgados();
+$animaisAdotados = $animalModel->countAnimaisAdotados();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['acao'] === 'consultar'){
     $animal = new Animal($pdo);
     try {

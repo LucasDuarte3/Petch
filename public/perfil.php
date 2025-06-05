@@ -16,6 +16,7 @@ if (isset($_SESSION['sucesso'])) {
 // Importa o banco e o model de usuários
 require_once dirname(__DIR__) . '/config/database.php';
 require_once dirname(__DIR__) . '/app/models/User.php';
+require_once ROOT_PATH . '/app/controllers/ConsultarAnimalController.php';
 
 // Busca os dados do usuário logado
 $userModel = new User($pdo);
@@ -40,7 +41,7 @@ $usuario = $userModel->getById($_SESSION['usuario']['id']);
 
 
     <div class="profile">
-      <div class="avatar"></div>
+      <div class="avatar"><img src="<?= IMG_PATH ?>/Avatar.png" alt="User"></div>
       <div class="info">
       <h2>Olá, <?= htmlspecialchars($usuario ['nome']) ?></h2>
         <p>CPF: <?= htmlspecialchars($usuario ['cpf_cnpj']) ?></p>
@@ -53,12 +54,12 @@ $usuario = $userModel->getById($_SESSION['usuario']['id']);
 
     <div class="metrics">
       <div>
-        <strong>0</strong>
-        <p>Animais divulgados</p>
+          <strong><?= htmlspecialchars($animaisDivulgados) ?></strong>
+          <p>Animais divulgados</p>
       </div>
       <div>
-        <strong>0</strong>
-        <p>Animais adotados</p>
+          <strong><?= htmlspecialchars($animaisAdotados) ?></strong>
+          <p>Animais adotados</p>
       </div>
     </div>
 

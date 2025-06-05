@@ -131,7 +131,7 @@ $chronicDiseaseDesc = $diseaseDesc;
       ?>
         <input type="hidden" name="<?= $inputName ?>" value="<?= htmlspecialchars($val) ?>">
       <?php } ?>
-      <input type="hidden" name="caminho_foto" value="<?= htmlspecialchars($_SESSION['animal_confirmation']['foto_path']) ?>">
+      <input type="hidden" name="foto_blob" value="<?= htmlspecialchars($_SESSION['animal_confirmation']['foto_path']) ?>">
 
       <button type="submit" class="btn btn-success">Confirmar e Publicar</button>
       <a href="<?= PUBLIC_PATH ?>/cadastro_animal.php" class="btn btn-secondary">Voltar e Editar</a>

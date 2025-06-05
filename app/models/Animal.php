@@ -8,15 +8,16 @@ class Animal{
     }
 
    public function create(
-    $nome, $especie, $raca = null, $idade = null, $porte, $historico_medico = null,
-    $caminho_foto = null, $usuario_id = null, $localidade = null, $doencas_cronicas = null,
+    $nome, $especie, $raca = null, $idade = null, $porte, $historico_medico = null, 
+    $usuario_id = null, $localidade = null, $doencas_cronicas = null,
     $comportamento = null, $foto_blob = null, $status = 'aguardando'
-) {
+    ) 
+    {
     try {
         $sql = "INSERT INTO animais
-            (nome, especie, raca, idade, porte, historico_medico, caminho_foto,
+            (nome, especie, raca, idade, porte, historico_medico,
              usuario_id, localidade, doencas_cronicas, comportamento, foto_blob, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             $nome,
@@ -25,7 +26,6 @@ class Animal{
             $idade,
             $porte,
             $historico_medico,
-            $caminho_foto,
             $usuario_id,
             $localidade,
             $doencas_cronicas,
@@ -52,6 +52,34 @@ class Animal{
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    // funções para aparecer na seção do perfil do usuário
+    public function countAnimaisDivulgados()
+    {
+        try {
+            $sql = "SELECT COUNT(*) as total FROM animais";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['total'] ?? 0;
+        } catch (PDOException $e) {
+            error_log("Erro ao contar animais divulgados: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+    public function countAnimaisAdotados()
+    {
+        try {
+            $sql = "SELECT COUNT(*) as total FROM animais WHERE status = 'adotado'";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['total'] ?? 0;
+        } catch (PDOException $e) {
+            error_log("Erro ao contar animais adotados: " . $e->getMessage());
+            return 0;
+        }
     }
 }
 ?>
