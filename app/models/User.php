@@ -221,5 +221,23 @@ class User {
         }
     }
 
+    public function atualizarDados($id, $dados) {
+        try {
+            $sql = "UPDATE usuarios SET 
+                    telefone = :telefone, 
+                    endereco = :endereco 
+                    WHERE id = :id";
+            
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':telefone', $dados['telefone']);
+            $stmt->bindParam(':endereco', $dados['endereco']);
+            $stmt->bindParam(':id', $id);
+            
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            error_log("Erro ao atualizar dados do usuário: " . $e->getMessage());
+            return false;
+        }
+    }
 }
 ?>

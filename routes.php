@@ -62,7 +62,7 @@ $apiRoutes = [
     '/service' => 'app/service/MailService.php',
     '/animal' => 'app/controllers/AnimalController.php',
     '/consulta_animal' => 'app/controllers/ConsultarAnimalController.php',
-    '/password_reset' => 'app/controllers/PasswordResetController.php'
+    '/password_reset' => 'app/controllers/PasswordResetController.php',
 ];
 
 // Rotas Administrativas

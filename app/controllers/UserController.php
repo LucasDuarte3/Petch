@@ -151,4 +151,32 @@ if (isset($_GET['acao']) && $_GET['acao'] === 'reenviar-confirmacao') {
     header("Location: " . PUBLIC_PATH . "/login.php");
     exit();
 }
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['acao'] === 'atualizar_dados') {
+    try {
+        if (!isset($_SESSION['usuario']['id'])) {
+            throw new Exception("Usuário não autenticado");
+        }
+
+        $user = new User($pdo);
+        $dados = [
+            'telefone' => $_POST['telefone'] ?? null,
+            'endereco' => $_POST['endereco'] ?? null
+        ];
+
+        if ($user->atualizarDados($_SESSION['usuario']['id'], $dados)) {
+            // Atualiza os dados na sessão
+            $_SESSION['usuario']['telefone'] = $dados['telefone'];
+            $_SESSION['usuario']['endereco'] = $dados['endereco'];
+                
+            $_SESSION['sucesso'] = "Dados atualizados com sucesso!";
+        } else {
+            throw new Exception("Erro ao atualizar dados no banco de dados");
+        }
+    } catch (Exception $e) {
+        $_SESSION['erro'] = $e->getMessage();
+    }
+        
+    header("Location: " . PUBLIC_PATH . "/perfil.php");
+    exit();
+}
 ?>

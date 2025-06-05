@@ -1,17 +1,18 @@
 <?php
 require_once __DIR__ . '/../config.php'; // Importa routes.php
 // Inicia a sessão apenas se ainda não estiver ativa
-session_start();
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 // Exibir ao usuario mensagens de erro/sucesso
 if (isset($_SESSION['erro'])) {
-    echo '<div class="alert alert-danger">' . htmlspecialchars($_SESSION['erro']) . '</div>';
+    echo '<div class="toast-container"><div class="toast toast-error">' . 
+         htmlspecialchars($_SESSION['erro']) . '</div></div>';
     unset($_SESSION['erro']);
 }
 if (isset($_SESSION['sucesso'])) {
-    echo '<div class="alert alert-success">' . htmlspecialchars($_SESSION['sucesso']) . '</div>';
+    echo '<div class="toast-container"><div class="toast toast-success">' . 
+         htmlspecialchars($_SESSION['sucesso']) . '</div></div>';
     unset($_SESSION['sucesso']);
 }
 ?>
@@ -143,6 +144,23 @@ if (isset($_SESSION['sucesso'])) {
       Todos os direitos reservados
     </div>
   </footer>
-
+<script>
+  // Remove os toasts automaticamente após a animação
+document.addEventListener('DOMContentLoaded', function() {
+    const toasts = document.querySelectorAll('.toast');
+    
+    toasts.forEach(toast => {
+        // Remove o toast após 3 segundos (tempo da animação)
+        setTimeout(() => {
+            toast.remove();
+            // Remove o container se não houver mais toasts
+            const container = document.querySelector('.toast-container');
+            if (container && container.children.length === 0) {
+                container.remove();
+            }
+        }, 3000);
+    });
+});
+</script>
 </body>
 </html>

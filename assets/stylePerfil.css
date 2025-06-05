@@ -8,7 +8,7 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
     background: #f4f4f4;
-    background-image: url('../images/BackgroundPerfil.png'); /* Corrigido a sintaxe */
+    background-image: url('../images/FundoEscuro.png'); /* Corrigido a sintaxe */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -38,7 +38,7 @@ body {
     background: white;
     max-width: 900px;
     margin: 2rem auto;
-    border-radius: 8px;
+    border-radius: 20px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   }
 
@@ -121,3 +121,67 @@ body {
     padding: 1rem;
     margin-top: 2rem;
   }
+  form .edit-icon {
+      cursor: pointer;
+      margin-left: 5px;
+  }
+
+  form .edit-icon:hover {
+      color: #007bff;
+  }
+
+  form .editable-input {
+      padding: 3px;
+      width: 200px;
+      padding: 5px;
+  }
+
+  form .save-btn {
+      margin-left: 5px;
+      padding: 3px 8px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+  }
+
+  form .save-btn:hover {
+      background-color: #0056b3;
+  }
+  /* Toast Notification */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.toast {
+    padding: 15px 25px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    animation: slideIn 0.5s, fadeOut 0.5s 2.5s forwards;
+    max-width: 300px;
+}
+
+.toast-success {
+    background-color: #28a745;
+}
+
+.toast-error {
+    background-color: #dc3545;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
