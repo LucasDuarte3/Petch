@@ -32,7 +32,7 @@ if (isset($_SESSION['sucesso'])) {
                 <img src="<?= IMG_PATH ?>/AvatarF.png" alt="Avatar" class="avatar">
             </div>
             <h2>Login Administrativo</h2>
-            <form action="<?= APP_PATH ?>/dashboard.php" method="POST">
+            <form action="<?= ADMIN_PATH ?>/dashboard.php" method="POST">
                 <div class="form-group">
                     <label for="email">Email:</label>
                     <input type="email" id="email" name="email" required>
