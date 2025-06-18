@@ -188,3 +188,31 @@ h2 {
     to { opacity: 0; }
 }
     /* Fim CSS INDEX */
+    /* Modal animal: fundo e sombras */
+.modal-content {
+    border-radius: 22px !important;
+    overflow: hidden !important;
+    border: none !important;
+    box-shadow: 0 6px 36px 0 rgba(0,0,0,0.12);
+}
+
+.modal-img-col {
+    border-radius: 22px 0 0 22px !important;
+    background: #fafafa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-info-col {
+    border-radius: 0 22px 22px 0 !important;
+    background: #f7fafc;
+    padding: 32px 24px 24px 24px;
+}
+
+#modalAnimalImg {
+    border-radius: 16px !important;
+    max-width: 95%;
+    max-height: 380px;
+    margin: auto;
+}

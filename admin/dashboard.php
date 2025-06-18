@@ -55,6 +55,7 @@ $usuarios = $adminModel->listUsers();
 $animais = $adminModel->listAnimals();
 $adocoes = $adminModel->listAdoptions();
 $animaisPendentes = $adminModel->listPendingAnimals();// Aqui está a lista de animais que ainda estão aguardando aprovação do admin
+$solicitacoes = $adminModel->listarSolicitacoesAdocao(); // Aqui estão as solicitações de adoção pendentes, que o admin pode aprovar ou recusar
 
 // Novidades principais que a gente fez, pra lembrar:
 // - Agora, quando alguém cadastra um animal, ele não aparece direto no index, só depois do admin aprovar.
@@ -88,6 +89,7 @@ $animaisPendentes = $adminModel->listPendingAnimals();// Aqui está a lista de a
                 <li><a href="#" onclick="mostrarView('animais')">Animais</a></li>
                 <li><a href="#" onclick="mostrarView('animais-pendentes')">Anúncios Pendentes</a></li>
                 <li><a href="#" onclick="mostrarView('adocoes')">Adoções</a></li>
+                 <li><a href="#" onclick="mostrarView('form-adocao')">Solicitações de Formulário</a></li>
             </ul>
         </nav>
     </div>
@@ -343,8 +345,53 @@ $animaisPendentes = $adminModel->listPendingAnimals();// Aqui está a lista de a
         </table>
     </div>
 </div>
+<div id="form-adocao-view" class="view">
+  <h2>Solicitações de Adoção Recebidas</h2>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead class="table-primary">
+        <tr>
+          <th>ID</th>
+          <th>Usuário</th>
+          <th>E-mail</th>
+          <th>Motivo da Adoção</th>
+          <th>Tela Proteção</th>
+          <th>Condomínio Aceita</th>
+          <th>Espaço</th>
+          <th>Financeiro</th>
+          <th>Experiência</th>
+          <th>Outros Animais</th>
+          <th>Compromisso</th>
+          <th>Data</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php foreach ($solicitacoes as $solicitacao): ?>
+          <tr>
+            <td><?= htmlspecialchars($solicitacao['id']) ?></td>
+            <td><?= htmlspecialchars($solicitacao['nome_usuario']) ?></td>
+            <td><?= htmlspecialchars($solicitacao['email_usuario']) ?></td>
+            <td><?= nl2br(htmlspecialchars($solicitacao['motivo_adocao'])) ?></td>
+            <td><?= htmlspecialchars($solicitacao['possui_tela_protecao']) ?></td>
+            <td><?= htmlspecialchars($solicitacao['condominio_aceita']) ?></td>
+            <td><?= htmlspecialchars($solicitacao['espaco_para_animal']) ?></td>
+            <td><?= htmlspecialchars($solicitacao['condicoes_financeiras']) ?></td>
+            <td><?= htmlspecialchars($solicitacao['experiencia_animais']) ?></td>
+            <td><?= htmlspecialchars($solicitacao['outros_animais']) ?></td>
+            <td><?= htmlspecialchars($solicitacao['compromisso']) ?></td>
+            <td><?= date('d/m/Y H:i', strtotime($solicitacao['criado_em'])) ?></td>
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+    <?php if (empty($solicitacoes)): ?>
+      <p class="text-muted">Nenhuma solicitação recebida ainda.</p>
+    <?php endif; ?>
+  </div>
+</div>
 
     </div>
+    
 </div>
 
 <script>
@@ -382,5 +429,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+<script>
+function mostrarView(nome) {
+    document.querySelectorAll('.view').forEach(function(view) {
+        view.classList.remove('active');
+    });
+    var v = document.getElementById(nome + '-view');
+    if (v) v.classList.add('active');
+}
+</script>
+
 </body>
 </html>

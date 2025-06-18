@@ -79,33 +79,43 @@ try {
       <p class="text-muted">Nenhum animal cadastrado no momento.</p>
     <?php else: ?>
       <div class="row">
-    <?php foreach ($animais as $animal): ?>
-          <div class="col-md-4 mb-4">
-            <div class="card h-100">
-              <?php if (!empty($animal['foto_blob'])): ?>
-                <?php $base64 = base64_encode($animal['foto_blob']); ?>
-                <img
-                  src="data:image/jpeg;base64,<?= $base64 ?>"
-                  class="card-img-top"
-                  alt="Foto de <?= htmlspecialchars($animal['nome']) ?>"
-                >
-              <?php endif; ?>
-              <div class="card-body">
-                <h5 class="card-title"><?= htmlspecialchars($animal['nome']); ?></h5>
-                <p class="card-text"><?= nl2br(htmlspecialchars($animal['descricao'])); ?></p>
-                <ul class="list-unstyled">
-                  <li><strong>Espécie:</strong> <?= htmlspecialchars($animal['especie']); ?></li>
-                  <li><strong>Raça:</strong> <?= htmlspecialchars($animal['raca']); ?></li>
-                  <li><strong>Idade:</strong> <?= htmlspecialchars($animal['idade']); ?></li>
-                  <li><strong>Porte:</strong> <?= htmlspecialchars($animal['porte']); ?></li>
-                        </ul>
-                        <a href="<?= PUBLIC_PATH ?>/detalhes_animal.php?id=<?= $animal['id'] ?>" class="btn btn-primary">Ver Detalhes</a>
-              </div>
-            </div>
-          </div>
-        <?php endforeach; ?>
+<?php foreach ($animais as $animal): ?>
+  <div class="col-md-4 mb-4">
+    <div class="card h-100">
+      <?php if (!empty($animal['foto_blob'])): ?>
+        <?php $base64 = base64_encode($animal['foto_blob']); ?>
+        <img
+          src="data:image/jpeg;base64,<?= $base64 ?>"
+          class="card-img-top animal-card-img"
+          alt="Foto de <?= htmlspecialchars($animal['nome']) ?>"
+          style="cursor:pointer"
+          data-nome="<?= htmlspecialchars($animal['nome']) ?>"
+          data-especie="<?= htmlspecialchars($animal['especie']) ?>"
+          data-raca="<?= htmlspecialchars($animal['raca']) ?>"
+          data-idade="<?= htmlspecialchars($animal['idade']) ?>"
+          data-porte="<?= htmlspecialchars($animal['porte']) ?>"
+          data-desc="<?= htmlspecialchars($animal['descricao']) ?>"
+          data-img="data:image/jpeg;base64,<?= $base64 ?>"
+            data-id="<?= $animal['id'] ?>"
+        >
+      <?php endif; ?>
+      <div class="card-body">
+        <h5 class="card-title"><?= htmlspecialchars($animal['nome']); ?></h5>
+        <p class="card-text"><?= nl2br(htmlspecialchars($animal['descricao'])); ?></p>
+        <ul class="list-unstyled">
+          <li><strong>Espécie:</strong> <?= htmlspecialchars($animal['especie']); ?></li>
+          <li><strong>Raça:</strong> <?= htmlspecialchars($animal['raca']); ?></li>
+          <li><strong>Idade:</strong> <?= htmlspecialchars($animal['idade']); ?></li>
+          <li><strong>Porte:</strong> <?= htmlspecialchars($animal['porte']); ?></li>
+        </ul>
+        <!-- Botão removido, pois o click já será na imagem -->
+      </div>
+    </div>
+  </div>
+<?php endforeach; ?>
       </div>
     <?php endif; ?>
+
 
     <div><?php include 'app/views/footer.php'; ?></div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
@@ -127,6 +137,66 @@ try {
         });
     });
     </script>
+
+<!-- Modal de Detalhes do Animal -->
+<div class="modal fade" id="animalModal" tabindex="-1" aria-labelledby="modalAnimalName" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content" style="border-radius: 20px;">
+      <div class="modal-body p-0" style="display: flex; flex-direction: row;">
+
+        <!-- Foto à esquerda -->
+        <div class="modal-img-col" style="flex:1; background: #fafafa; display:flex; align-items:center; justify-content:center; border-radius:20px 0 0 20px;">
+          <img id="modalAnimalImg" src="" alt="Foto do animal" style="max-width: 100%; max-height: 400px; border-radius:16px;"/>
+        </div>
+
+        <!-- Informações à direita -->
+        <div class="modal-info-col" style="flex:1.5; padding: 32px 24px 24px 24px;">
+          <h2 id="modalAnimalName" style="font-weight: bold; margin-bottom: 12px;"></h2>
+          <ul class="list-unstyled mb-2" style="font-size: 1.08rem;">
+            <li><b>Espécie:</b> <span id="modalAnimalEspecie"></span></li>
+            <li><b>Raça:</b> <span id="modalAnimalRaca"></span></li>
+            <li><b>Idade:</b> <span id="modalAnimalIdade"></span></li>
+            <li><b>Porte:</b> <span id="modalAnimalPorte"></span></li>
+          </ul>
+          <div id="modalAnimalDesc" class="mb-4" style="color: #444;"></div>
+          <button type="button" id="btnQueroAdotar" class="btn btn-warning btn-lg w-100" style="font-weight:bold; border-radius:12px;">
+  Quero adotar
+</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  let currentAnimalId = null;
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll('.animal-card-img').forEach(function(img) {
+    img.addEventListener('click', function() {
+      document.getElementById('modalAnimalName').textContent = img.dataset.nome;
+      document.getElementById('modalAnimalEspecie').textContent = img.dataset.especie;
+      document.getElementById('modalAnimalRaca').textContent = img.dataset.raca;
+      document.getElementById('modalAnimalIdade').textContent = img.dataset.idade + " ano(s)";
+      document.getElementById('modalAnimalPorte').textContent = img.dataset.porte;
+      document.getElementById('modalAnimalDesc').textContent = img.dataset.desc;
+      document.getElementById('modalAnimalImg').src = img.dataset.img;
+currentAnimalId = img.dataset.id;
+      // Abre o modal do bootstrap
+      var myModal = new bootstrap.Modal(document.getElementById('animalModal'));
+      myModal.show();
+    });
+  });
+  document.getElementById('btnQueroAdotar').onclick = function() {
+    if (currentAnimalId) {
+      window.location.href = "<?= BASE_PATH ?>/public/formadocao.php?id=" + currentAnimalId;
+    }
+  }
+});
+</script>
+
+
 </body>
 
 </html>

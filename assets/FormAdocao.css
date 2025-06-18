@@ -119,6 +119,27 @@ body {
     background-color: #dc3545;
 }
 
+textarea[name="motivo_adocao"] {
+  width: 100%;
+  min-height: 70px;
+  max-height: 180px;
+  padding: 0.7rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #f0f0f0;
+  font-size: 0.96rem;
+  resize: vertical;
+  transition: border 0.2s;
+  margin-top: 0.4rem;
+}
+
+textarea[name="motivo_adocao"]:focus {
+  border: 1.5px solid #0047a0;
+  background: #fff;
+  outline: none;
+}
+
+
 @keyframes slideIn {
     from { transform: translateX(100%); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
@@ -128,3 +149,4 @@ body {
     from { opacity: 1; }
     to { opacity: 0; }
 }
+

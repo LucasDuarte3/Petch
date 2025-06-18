@@ -255,5 +255,26 @@ public function rejectAnimal($animalId)
     return $stmt->execute([$animalId]);
 }
 
+public function listarSolicitacoesAdocao() {
+    $sql = "SELECT 
+                fa.id,
+                fa.criado_em,
+                u.nome as nome_usuario,
+                u.email as email_usuario,
+                fa.possui_tela_protecao,
+                fa.condominio_aceita,
+                fa.espaco_para_animal,
+                fa.condicoes_financeiras,
+                fa.motivo_adocao,
+                fa.experiencia_animais,
+                fa.outros_animais,
+                fa.compromisso
+            FROM form_adocao fa
+            LEFT JOIN usuarios u ON fa.usuario_id = u.id
+            ORDER BY fa.criado_em DESC";
+    $stmt = $this->pdo->query($sql);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 
 }

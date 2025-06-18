@@ -1,28 +1,33 @@
 <?php
-require_once __DIR__ . '/../config.php'; // Importa routes.php
-// Inicia a sessão apenas se ainda não estiver ativa
+require_once __DIR__ . '/../config.php';
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+  session_start();
 }
-// Exibir ao usuario mensagens de erro/sucesso
+if (!isset($_SESSION['usuario'])) {
+  header("Location: " . BASE_PATH . "/public/login.php");
+  exit;
+}
+$usuario = $_SESSION['usuario']; // Puxa os dados do usuário logado
 if (isset($_SESSION['erro'])) {
-    echo '<div class="toast-container"><div class="toast toast-error">' . 
-         htmlspecialchars($_SESSION['erro']) . '</div></div>';
-    unset($_SESSION['erro']);
+  echo '<div class="toast-container"><div class="toast toast-error">' .
+    htmlspecialchars($_SESSION['erro']) . '</div></div>';
+  unset($_SESSION['erro']);
 }
 if (isset($_SESSION['sucesso'])) {
-    echo '<div class="toast-container"><div class="toast toast-success">' . 
-         htmlspecialchars($_SESSION['sucesso']) . '</div></div>';
-    unset($_SESSION['sucesso']);
+  echo '<div class="toast-container"><div class="toast toast-success">' .
+    htmlspecialchars($_SESSION['sucesso']) . '</div></div>';
+  unset($_SESSION['sucesso']);
 }
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <title>Formulário de Adoção - Petch</title>
   <link rel="stylesheet" href="<?= ASSETS_PATH ?>/FormAdocao.css">
 </head>
+
 <body>
 
   <header class="topbar">
@@ -32,89 +37,57 @@ if (isset($_SESSION['sucesso'])) {
   </header>
 
   <main class="container">
-    <h1>Olá, usuário!</h1>
-    <p class="location">cidade</p>
+    <h1>Solicitação de Adoção</h1>
+    <p class="info">Olá, <b><?= htmlspecialchars($usuario['nome']) ?></b>!</p>
+    <p class="info">Preencha o formulário abaixo para solicitar a adoção.<br>
+      Suas informações pessoais já foram preenchidas pelo sistema.</p>
 
-    <p class="info">
-      Preencha o formulário abaixo para dar início à sua solicitação*<br>
-      Fique de olho no e-mail e acompanhe o status da sua solicitação*
-    </p>
-    
-    <form method="POST" action="<?= CONTROLLERS_PATH ?>#"> <!-- colocar direcionamento --> 
+<form method="POST" action="<?= CONTROLLERS_PATH ?>/adocaoController.php">
+  <input type="hidden" name="nome" value="<?= htmlspecialchars($usuario['nome']) ?>">
+  <input type="hidden" name="email" value="<?= htmlspecialchars($usuario['email']) ?>">
+  <input type="hidden" name="telefone" value="<?= htmlspecialchars($usuario['telefone']) ?>">
+  <!--<input type="hidden" name="endereco" value="<?= htmlspecialchars($usuario['endereco'] ?? '') ?>">
+  <input type="hidden" name="tipo_moradia" value="<?= htmlspecialchars($usuario['tipo_moradia'] ?? '') ?>">-->
 
-      <label>Nome do animal:*
-        <input type="text" name="nome_animal" placeholder="Nome do animal" required>
-      </label>
+  <?php if (isset($_GET['animal_id'])): ?>
+    <input type="hidden" name="animal_id" value="<?= intval($_GET['animal_id']) ?>">
+  <?php endif; ?>
 
-      <label>Espécie:*
-        <select name="especie" required>
-          <option value="">Selecione a espécie</option>
-          <option value="Cachorro">Cachorro</option>
-          <option value="Gato">Gato</option>
-        </select>
-      </label>
+      
 
-      <label>Raça:*
-        <select name="raca" required>
-          <option value="">Selecione a raça</option>
-          <option value="SRD">SRD</option>
-          <option value="Outro">Outro</option>
-        </select>
-      </label>
-
-      <label>Nome:*
-        <input type="text" name="nome" required>
-      </label>
-
-      <label>E-mail:*
-        <input type="email" name="email" required>
-      </label>
-
-      <label>Telefone:*
-        <input type="text" name="telefone" required>
-      </label>
-
-      <label>Endereço:*
-        <input type="text" name="endereco" required>
-      </label>
-
-      <label>Casa ou apartamento?*
-        <select name="tipo_moradia" required>
-          <option value="">Selecione se mora em casa ou apartamento</option>
-          <option value="Casa">Casa</option>
-          <option value="Apartamento">Apartamento</option>
-        </select>
-      </label>
-
-      <p class="info">
-        As próximas perguntas são essenciais para confirmação da sua solicitação de adoção. Em caso de recusa ou aceite da solicitação você receberá um e-mail. Fique atento aos próximos passos do status da sua solicitação e acompanhe também pelo seu e-mail.
-      </p>
-
-      <label>Em caso de morar em apartamento, todas as janelas possuem tela de proteção?
-        <select name="tela_protecao" required>
+      <!-- Telas de proteção -->
+      <label>
+        Todas as janelas possuem tela de proteção?
+        <select name="possui_tela_protecao" required>
           <option value="">Selecione</option>
           <option value="Sim">Sim</option>
           <option value="Não">Não</option>
         </select>
       </label>
 
-      <label>Se mora em condomínio ou aluguel, é permitido ter pets (mesmo de médio ou grande porte)?
-        <select name="condominio_permite" required>
+      <!-- Condomínio permite pets -->
+      <label>
+        O condomínio ou proprietário permite pets?
+        <select name="condominio_aceita" required>
           <option value="">Selecione</option>
           <option value="Sim">Sim</option>
           <option value="Não">Não</option>
         </select>
       </label>
 
-      <label>Seu lar tem espaço suficiente para o animal (porte do animal)?
-        <select name="espaco_suficiente" required>
+      <!-- Espaço suficiente -->
+      <label>
+        Seu lar tem espaço suficiente para o animal (porte do animal)?
+        <select name="espaco_para_animal" required>
           <option value="">Selecione</option>
           <option value="Sim">Sim</option>
           <option value="Não">Não</option>
         </select>
       </label>
 
-      <label>Você possui condições de arcar com segurança, alimentação e cuidados médicos?
+      <!-- Condições financeiras -->
+      <label>
+        Você possui condições de arcar com alimentação e cuidados veterinários?
         <select name="condicoes_financeiras" required>
           <option value="">Selecione</option>
           <option value="Sim">Sim</option>
@@ -122,19 +95,47 @@ if (isset($_SESSION['sucesso'])) {
         </select>
       </label>
 
+      <!-- Motivo da adoção -->
+      <label for="motivo_adocao">
+        Por que você quer adotar um animal? (opcional)
+      </label>
+      <textarea
+        name="motivo_adocao"
+        id="motivo_adocao"
+        rows="3"
+        maxlength="250"
+        placeholder="Conte um pouco sobre o motivo da adoção" required></textarea>
+
+
+      <!-- Experiência prévia com animais -->
       <label>
-        Me comprometo a realizar uma adoção responsável, sou consciente de que ao adotar esse animal estou me comprometendo a manter sua integridade e bem estar e que estou sujeito à Lei nº 9.605/1998 que prevê pena de detenção além de multa em caso de maus tratos ou abandono.
-        <select name="compromisso" required>
+        Você já teve animais de estimação antes?
+        <select name="experiencia_animais" required>
           <option value="">Selecione</option>
           <option value="Sim">Sim</option>
           <option value="Não">Não</option>
         </select>
       </label>
 
-      <input type="hidden" name="acao" value="#"> <!-- colocar ação do controller -->
+      <!-- Outros animais na casa -->
+      <label>
+        Você já possui outros animais na residência?
+        <select name="outros_animais" required>
+          <option value="">Selecione</option>
+          <option value="Sim">Sim</option>
+          <option value="Não">Não</option>
+        </select>
+      </label>
 
-      <button type="submit">Enviar</button> <!-- colocar ação do controller -->
-    <!--  <button type="reset">Limpar</button> Colocar um botão que limpa os dados -->
+      <!-- Compromisso legal -->
+      <label>
+        <input type="checkbox" name="compromisso" value="Sim" required>
+        Declaro que me comprometo com a adoção responsável e estou ciente das responsabilidades legais.
+      </label>
+
+      <input type="hidden" name="acao" value="solicitar_adocao">
+
+      <button type="submit">Enviar solicitação</button>
     </form>
   </main>
 
@@ -144,23 +145,21 @@ if (isset($_SESSION['sucesso'])) {
       Todos os direitos reservados
     </div>
   </footer>
-<script>
-  // Remove os toasts automaticamente após a animação
-document.addEventListener('DOMContentLoaded', function() {
-    const toasts = document.querySelectorAll('.toast');
-    
-    toasts.forEach(toast => {
-        // Remove o toast após 3 segundos (tempo da animação)
+  <script>
+    // Remove os toasts automaticamente após a animação
+    document.addEventListener('DOMContentLoaded', function() {
+      const toasts = document.querySelectorAll('.toast');
+      toasts.forEach(toast => {
         setTimeout(() => {
-            toast.remove();
-            // Remove o container se não houver mais toasts
-            const container = document.querySelector('.toast-container');
-            if (container && container.children.length === 0) {
-                container.remove();
-            }
+          toast.remove();
+          const container = document.querySelector('.toast-container');
+          if (container && container.children.length === 0) {
+            container.remove();
+          }
         }, 3000);
+      });
     });
-});
-</script>
+  </script>
 </body>
+
 </html>
