@@ -1,5 +1,7 @@
 <?php
 require_once __DIR__ . '/../config.php';
+require_once ROOT_PATH . '/app/models/User.php';
+require_once ROOT_PATH . '/app/controllers/UserController.php';
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
@@ -18,6 +20,7 @@ if (isset($_SESSION['sucesso'])) {
     htmlspecialchars($_SESSION['sucesso']) . '</div></div>';
   unset($_SESSION['sucesso']);
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -43,17 +46,43 @@ if (isset($_SESSION['sucesso'])) {
       Suas informações pessoais já foram preenchidas pelo sistema.</p>
 
 <form method="POST" action="<?= CONTROLLERS_PATH ?>/adocaoController.php">
-  <input type="hidden" name="nome" value="<?= htmlspecialchars($usuario['nome']) ?>">
-  <input type="hidden" name="email" value="<?= htmlspecialchars($usuario['email']) ?>">
-  <input type="hidden" name="telefone" value="<?= htmlspecialchars($usuario['telefone']) ?>">
-  <!--<input type="hidden" name="endereco" value="<?= htmlspecialchars($usuario['endereco'] ?? '') ?>">
-  <input type="hidden" name="tipo_moradia" value="<?= htmlspecialchars($usuario['tipo_moradia'] ?? '') ?>">-->
+  <input type="hidden" name="nome" value="<?= htmlspecialchars($usuario['nome'] ?? '') ?>">
+  <input type="hidden" name="email" value="<?= htmlspecialchars($usuario['email'] ?? '') ?>">
+
 
   <?php if (isset($_GET['animal_id'])): ?>
     <input type="hidden" name="animal_id" value="<?= intval($_GET['animal_id']) ?>">
   <?php endif; ?>
 
-      
+      <!-- Campo de telefone (caso não esteja na sessão) -->
+      <label for="telefone">Telefone:
+      <input
+        type="text"
+        id="telefone"
+        name="telefone"
+        value="<?= htmlspecialchars($usuario['telefone'] ?? '') ?>"
+        required
+      ></label>
+
+      <!-- Campo de endereço -->
+      <label for="endereco">Endereço completo:
+      <input
+        type="text"
+        id="endereco"
+        name="endereco"
+        placeholder="Rua, número, bairro, cidade"
+        required
+      ></label>
+
+      <!-- Campo de tipo de moradia -->
+      <label for="tipo_moradia">Tipo de moradia:
+      <select name="tipo_moradia" id="tipo_moradia" required>
+        <option value="">Selecione</option>
+        <option value="Casa">Casa</option>
+        <option value="Apartamento">Apartamento</option>
+        <option value="Chácara">Chácara</option>
+        <option value="Outro">Outro</option>
+      </select></label>
 
       <!-- Telas de proteção -->
       <label>

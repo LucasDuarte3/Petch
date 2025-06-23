@@ -89,9 +89,7 @@ $usuario = $userModel->getById($_SESSION['usuario']['id']);
     <button type="submit" class="btn">Cadastrar novo animal</button>
     </form>
 
-  <footer>
-  <?php include ROOT_PATH . '/app/views/footer.php'; ?>
-  </footer>
+
   
 <script>
 function toggleEdit(field) {

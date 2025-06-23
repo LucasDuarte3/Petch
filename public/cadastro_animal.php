@@ -134,8 +134,8 @@ $usuario = $userModel->getById($_SESSION['usuario']['id']);
 
   <!-- Rodapé -->
   <footer class="footer">
-    <img src="logo-petch.png" alt="Petch">
-    <p>Todos os direitos reservados</p>
+      ❤️ Petch <br>
+      Todos os direitos reservados
   </footer>
 <script>
   // Remove os toasts automaticamente após a animação

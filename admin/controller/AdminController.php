@@ -63,6 +63,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao'])) {
                 $adminModel->cleanOldAdoptions(30); // 30 dias
                 $_SESSION['sucesso'] = "Adoções antigas removidas com sucesso!";
                 break;
+            case 'aprovar_adocao':
+                if ($adminModel->approveAdoption($_POST['adocao_id'], $_POST['animal_id'])) {
+                    $_SESSION['sucesso'] = "Adoção aprovada com sucesso!";
+                } else {
+                    $_SESSION['erro'] = "Erro ao aprovar a adoção.";
+                }
+                break;
+
+            case 'recusar_adocao':
+                if ($adminModel->rejectAdoption($_POST['adocao_id'])) {
+                    $_SESSION['sucesso'] = "Adoção recusada com sucesso!";
+                } else {
+                    $_SESSION['erro'] = "Erro ao recusar a adoção.";
+                }
+                break;
         }
         // Redirecionamento padronizado (mantido igual aos outros cases)
         $redirect = $_POST['redirect'] ?? 'dashboard';

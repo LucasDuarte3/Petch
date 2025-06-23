@@ -74,7 +74,6 @@ try {
 
     <div class="pets-cards">
           <main class="container py-5">
-    <h1 class="mb-4">Animais para Adoção</h1>
     <?php if (empty($animais)): ?>
       <p class="text-muted">Nenhum animal cadastrado no momento.</p>
     <?php else: ?>
@@ -116,8 +115,8 @@ try {
       </div>
     <?php endif; ?>
 
-
-    <div><?php include 'app/views/footer.php'; ?></div>
+</main>
+    <?php include 'app/views/footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
 
     // Remove os toasts automaticamente após a animação

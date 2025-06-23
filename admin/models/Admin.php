@@ -15,27 +15,102 @@ class Admin
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row['total'];
     }
-    public function listAdoptions($filters = [])
-{
-    $sql = "SELECT sa.id, sa.status, sa.data_solicitacao,
-                   u.nome AS usuario_nome,
-                   a.nome AS animal_nome
-            FROM solicitacoes_adocao sa
-            JOIN usuarios u ON sa.usuario_id = u.id
-            JOIN animais a ON sa.animal_id = a.id
-            WHERE 1=1";
-    $params = [];
 
-    if (isset($filters['status'])) {
-        $sql .= " AND sa.status = ?";
-        $params[] = $filters['status'];
+    public function processarFormularioAdocao($dados) {
+    $sql = "INSERT INTO form_adocao (
+                usuario_id, animal_id, nome, email, telefone, endereco, 
+                tipo_moradia, possui_tela_protecao, condominio_aceita, 
+                espaco_para_animal, condicoes_financeiras, motivo_adocao, 
+                experiencia_animais, outros_animais, compromisso, status
+            ) VALUES (
+                :usuario_id, :animal_id, :nome, :email, :telefone, :endereco, 
+                :tipo_moradia, :possui_tela_protecao, :condominio_aceita, 
+                :espaco_para_animal, :condicoes_financeiras, :motivo_adocao, 
+                :experiencia_animais, :outros_animais, :compromisso, 'pendente'
+            )";
+    
+    $stmt = $this->pdo->prepare($sql);
+    return $stmt->execute([
+        ':usuario_id' => $dados['usuario_id'] ?? null,
+        ':animal_id' => $dados['animal_id'] ?? null,
+        ':nome' => $dados['nome'],
+        ':email' => $dados['email'],
+        ':telefone' => $dados['telefone'],
+        ':endereco' => $dados['endereco'],
+        ':tipo_moradia' => $dados['tipo_moradia'],
+        ':possui_tela_protecao' => $dados['possui_tela_protecao'],
+        ':condominio_aceita' => $dados['condominio_aceita'],
+        ':espaco_para_animal' => $dados['espaco_para_animal'],
+        ':condicoes_financeiras' => $dados['condicoes_financeiras'],
+        ':motivo_adocao' => $dados['motivo_adocao'] ?? null,
+        ':experiencia_animais' => $dados['experiencia_animais'],
+        ':outros_animais' => $dados['outros_animais'],
+        ':compromisso' => $dados['compromisso'] ?? 'Não'
+    ]);
+}
+
+    public function listAdoptions($filters = [])
+    {
+        $sql = "SELECT 
+                    f.id, 
+                    f.status, 
+                    f.criado_em AS data_solicitacao,
+                    f.nome AS usuario_nome, 
+                    f.email AS usuario_email,
+                    f.telefone,
+                    a.nome AS animal_nome, 
+                    a.id AS animal_id,
+                    f.motivo_adocao,
+                    f.possui_tela_protecao,
+                    f.condominio_aceita,
+                    f.espaco_para_animal,
+                    f.condicoes_financeiras,
+                    f.experiencia_animais,
+                    f.outros_animais,
+                    f.compromisso
+                FROM form_adocao f
+                LEFT JOIN animais a ON f.animal_id = a.id
+                WHERE 1=1";
+        
+        $params = [];
+        
+        if (isset($filters['status'])) {
+            $sql .= " AND f.status = ?";
+            $params[] = $filters['status'];
+        }
+        
+        $sql .= " ORDER BY f.criado_em DESC";
+        
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    $sql .= " ORDER BY sa.id DESC";
-    $stmt = $this->pdo->prepare($sql);
-    $stmt->execute($params);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+    public function approveAdoption($adocaoId, $animalId)
+    {
+        $this->pdo->beginTransaction();
+        try {
+            // 1. Atualiza status da solicitação
+            $stmt = $this->pdo->prepare("UPDATE form_adocao SET status = 'aprovado' WHERE id = ?");
+            $stmt->execute([$adocaoId]);
+
+            // 2. Atualiza status do animal
+            $stmt = $this->pdo->prepare("UPDATE animais SET status = 'adotado' WHERE id = ?");
+            $stmt->execute([$animalId]);
+
+            $this->pdo->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            throw $e;
+        }
+    }
+
+    public function rejectAdoption($adocaoId)
+    {
+        $stmt = $this->pdo->prepare("UPDATE form_adocao SET status = 'recusado' WHERE id = ?");
+        return $stmt->execute([$adocaoId]);
+    }
 
 
     // Usuários
@@ -107,41 +182,11 @@ class Admin
 
 
     // Adoções
-    public function approveAdoption($adocaoId, $animalId)
-    {
-        $this->pdo->beginTransaction();
-        try {
-            // 1. Atualiza status da solicitação
-            $stmt = $this->pdo->prepare("UPDATE solicitacoes_adocao SET status = 'aprovado' WHERE id = ?");
-            $stmt->execute([$adocaoId]);
-
-            // 2. Atualiza status do animal
-            $stmt = $this->pdo->prepare("UPDATE animais SET status = 'adotado' WHERE id = ?");
-            $stmt->execute([$animalId]);
-
-            // 3. Registra no histórico
-            $solicitacao = $this->pdo->query("SELECT usuario_id, animal_id FROM solicitacoes_adocao WHERE id = $adocaoId")->fetch();
-
-            $stmt = $this->pdo->prepare("INSERT INTO historico_adocoes (usuario_id, animal_id) VALUES (?, ?)");
-            $stmt->execute([$solicitacao['usuario_id'], $solicitacao['animal_id']]);
-
-            $this->pdo->commit();
-            return true;
-        } catch (Exception $e) {
-            $this->pdo->rollBack();
-            throw $e;
-        }
-    }
-
-    public function rejectAdoption($adocaoId)
-    {
-        $stmt = $this->pdo->prepare("UPDATE solicitacoes_adocao SET status = 'negado' WHERE id = ?");
-        return $stmt->execute([$adocaoId]);
-    }
+    
 
     public function cleanOldAdoptions($days)
     {
-        $stmt = $this->pdo->prepare("DELETE FROM solicitacoes_adocao WHERE status = 'pendente' AND data_solicitacao < DATE_SUB(NOW(), INTERVAL ? DAY)");
+        $stmt = $this->pdo->prepare("DELETE FROM form_adocao WHERE status = 'pendente' AND data_solicitacao < DATE_SUB(NOW(), INTERVAL ? DAY)");
         return $stmt->execute([$days]);
     }
 
@@ -200,7 +245,7 @@ class Admin
 
     public function countPendingAdoptions()
     {
-        $stmt = $this->pdo->query("SELECT COUNT(*) FROM solicitacoes_adocao WHERE status = 'pendente'");
+        $stmt = $this->pdo->query("SELECT COUNT(*) FROM form_adocao WHERE status = 'pendente'");
         return $stmt->fetchColumn();
     }
 
@@ -258,9 +303,10 @@ public function rejectAnimal($animalId)
 public function listarSolicitacoesAdocao() {
     $sql = "SELECT 
                 fa.id,
-                fa.criado_em,
-                u.nome as nome_usuario,
-                u.email as email_usuario,
+                fa.criado_em AS data_solicitacao,
+                u.nome AS usuario_nome,
+                u.email AS email_usuario,
+                a.nome AS animal_nome,
                 fa.possui_tela_protecao,
                 fa.condominio_aceita,
                 fa.espaco_para_animal,
@@ -271,10 +317,13 @@ public function listarSolicitacoesAdocao() {
                 fa.compromisso
             FROM form_adocao fa
             LEFT JOIN usuarios u ON fa.usuario_id = u.id
+            LEFT JOIN animais a ON fa.animal_id = a.id
             ORDER BY fa.criado_em DESC";
+    
     $stmt = $this->pdo->query($sql);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 
 
 }

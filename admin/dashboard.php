@@ -30,7 +30,7 @@ $totalAnimais = $adminModel->countAnimals();
 $totalAdocoes = $adminModel->countAdoptions();
 $solicitacoes = $adminModel->listAdoptions(['status' => 'pendente']);
 
-$stmt = $pdo->query("SELECT status, COUNT(*) as total FROM solicitacoes_adocao GROUP BY status");// Preparamos dados de status das adoções, pra mostrar nos gráficos do dashboard
+$stmt = $pdo->query("SELECT status, COUNT(*) as total FROM form_adocao GROUP BY status");// Preparamos dados de status das adoções, pra mostrar nos gráficos do dashboard
 $adocoesStatus = [];
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $adocoesStatus[$row['status']] = $row['total'];
@@ -45,8 +45,8 @@ $tiposAnimais = [];
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $tiposAnimais[$row['especie']] = $row['total'];
 }
-$caes = $tiposAnimais['cachorro'] ?? 0;
-$gatos = $tiposAnimais['gato'] ?? 0;
+$caes = $tiposAnimais['Cachorro'] ?? 0;
+$gatos = $tiposAnimais['Gato'] ?? 0;
 $outros = array_sum($tiposAnimais) - $caes - $gatos;
 
 // Listagens que vão preencher as tabelas das views (usuários, animais, adoções, anúncios pendentes)
@@ -134,36 +134,12 @@ $solicitacoes = $adminModel->listarSolicitacoesAdocao(); // Aqui estão as solic
                 </div>
             </div>
 
-            <div class="search-section">
-                <h2><i class="bi bi-search"></i> Busca Avançada</h2>
-                <form action="<?= APP_PATH ?>/model/user" method="post">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>CPF</label>
-                            <input type="text" name="cpf" class="form-control" placeholder="Digite o CPF">
-                            <label>Nome do usuário</label>
-                            <input type="text" name="nome_usuario" class="form-control" placeholder="Nome completo">
-                        </div>
-                        <div class="col-md-6">
-                            <label>E-mail do usuário</label>
-                            <input type="email" name="email" class="form-control" placeholder="E-mail cadastrado">
-                            <label>Nome do animal</label>
-                            <input type="text" name="nome_animal" class="form-control" placeholder="Nome do animal">
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary mt-3">
-                        <i class="bi bi-search"></i> Buscar
-                    </button>
-                </form>
-            </div>
-
             <div class="requests-section">
                 <h2><i class="bi bi-list-check"></i> Solicitações Pendentes</h2>
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>ID</th>
                                 <th>Usuário</th>
                                 <th>Animal</th>
                                 <th>Data</th>
@@ -171,31 +147,38 @@ $solicitacoes = $adminModel->listarSolicitacoesAdocao(); // Aqui estão as solic
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($solicitacoes as $solicitacao): ?>
+                            <?php 
+                            $solicitacoesPendentes = $adminModel->listAdoptions(['status' => 'pendente']);
+                            foreach ($solicitacoesPendentes as $solicitacao): 
+                            ?>
                             <tr>
-                                <td><?= $solicitacao['id'] ?></td>
-                                <td><?= $solicitacao['usuario_nome'] ?></td>
-                                <td><?= $solicitacao['animal_nome'] ?></td>
-                                <td><?= date('d/m/Y', strtotime($solicitacao['data_solicitacao'])) ?></td>
+                                <td><?= htmlspecialchars($solicitacao['usuario_nome']) ?></td>
+                                <td><?= htmlspecialchars($solicitacao['animal_nome'] ?? 'N/A') ?></td>
+                                <td><?= date('d/m/Y H:i', strtotime($solicitacao['data_solicitacao'])) ?></td>
                                 <td>
-                                    <form action="<?= ADMIN_PATH ?>/admin/controller" method="post" style="display:inline;">
+                                    <form method="post" action="<?= ADMIN_PATH ?>/AdminController" style="display:inline;">
                                         <input type="hidden" name="acao" value="aprovar_adocao">
                                         <input type="hidden" name="adocao_id" value="<?= $solicitacao['id'] ?>">
-                                        <input type="hidden" name="animal_id" value="<?= $solicitacao['animal_id'] ?>">
-                                        <button type="submit" class="btn btn-sm btn-success">
+                                        <input type="hidden" name="animal_id" value="<?= $solicitacao['animal_id'] ?? '' ?>">
+                                        <button type="submit" class="btn btn-success btn-sm">
                                             <i class="bi bi-check"></i> Aprovar
                                         </button>
                                     </form>
-                                    <form action="<?= ADMIN_PATH ?>/admin/controller" method="post" style="display:inline;">
+                                    <form method="post" action="<?= ADMIN_PATH ?>/AdminController" style="display:inline;">
                                         <input type="hidden" name="acao" value="recusar_adocao">
                                         <input type="hidden" name="adocao_id" value="<?= $solicitacao['id'] ?>">
-                                        <button type="submit" class="btn btn-sm btn-danger">
+                                        <button type="submit" class="btn btn-danger btn-sm">
                                             <i class="bi bi-x"></i> Recusar
                                         </button>
                                     </form>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
+                            <?php if (empty($solicitacoesPendentes)): ?>
+                            <tr>
+                                <td colspan="4" class="text-center">Nenhuma solicitação pendente</td>
+                            </tr>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
@@ -297,18 +280,18 @@ $solicitacoes = $adminModel->listarSolicitacoesAdocao(); // Aqui estão as solic
                 <td><?= htmlspecialchars($animal['dono_nome']) ?></td>
                 <td>
                     <form action="<?= ADMIN_PATH ?>/controller/AdminController.php" method="post" style="display:inline;">
-    <input type="hidden" name="acao" value="aprovar_animal">
-    <input type="hidden" name="animal_id" value="<?= $animal['id'] ?>">
-    <input type="hidden" name="redirect" value="dashboard">
-    <button type="submit" class="btn btn-success btn-sm">Aprovar</button>
-</form>
+                        <input type="hidden" name="acao" value="aprovar_animal">
+                        <input type="hidden" name="animal_id" value="<?= $animal['id'] ?>">
+                        <input type="hidden" name="redirect" value="dashboard">
+                        <button type="submit" class="btn btn-success btn-sm">Aprovar</button>
+                    </form>
 
-<form action="<?= ADMIN_PATH ?>/controller/AdminController.php" method="post" style="display:inline;">
-    <input type="hidden" name="acao" value="rejeitar_animal">
-    <input type="hidden" name="animal_id" value="<?= $animal['id'] ?>">
-    <input type="hidden" name="redirect" value="dashboard">
-    <button type="submit" class="btn btn-danger btn-sm">Recusar</button>
-</form>
+                    <form action="<?= ADMIN_PATH ?>/controller/AdminController.php" method="post" style="display:inline;">
+                        <input type="hidden" name="acao" value="rejeitar_animal">
+                        <input type="hidden" name="animal_id" value="<?= $animal['id'] ?>">
+                        <input type="hidden" name="redirect" value="dashboard">
+                        <button type="submit" class="btn btn-danger btn-sm">Recusar</button>
+                    </form>
 
                 </td>
             </tr>
@@ -369,17 +352,17 @@ $solicitacoes = $adminModel->listarSolicitacoesAdocao(); // Aqui estão as solic
         <?php foreach ($solicitacoes as $solicitacao): ?>
           <tr>
             <td><?= htmlspecialchars($solicitacao['id']) ?></td>
-            <td><?= htmlspecialchars($solicitacao['nome_usuario']) ?></td>
+            <td><?= htmlspecialchars($solicitacao['usuario_nome']) ?></td>
             <td><?= htmlspecialchars($solicitacao['email_usuario']) ?></td>
             <td><?= nl2br(htmlspecialchars($solicitacao['motivo_adocao'])) ?></td>
-            <td><?= htmlspecialchars($solicitacao['possui_tela_protecao']) ?></td>
-            <td><?= htmlspecialchars($solicitacao['condominio_aceita']) ?></td>
-            <td><?= htmlspecialchars($solicitacao['espaco_para_animal']) ?></td>
-            <td><?= htmlspecialchars($solicitacao['condicoes_financeiras']) ?></td>
-            <td><?= htmlspecialchars($solicitacao['experiencia_animais']) ?></td>
-            <td><?= htmlspecialchars($solicitacao['outros_animais']) ?></td>
-            <td><?= htmlspecialchars($solicitacao['compromisso']) ?></td>
-            <td><?= date('d/m/Y H:i', strtotime($solicitacao['criado_em'])) ?></td>
+            <td><?= $solicitacao['possui_tela_protecao'] === 'Sim' ? 'Sim' : 'Não' ?></td>
+            <td><?= $solicitacao['condominio_aceita'] === 'Sim' ? 'Sim' : 'Não' ?></td>
+            <td><?= $solicitacao['espaco_para_animal'] == 'Sim' ? 'Sim' : 'Não' ?></td>
+            <td><?= $solicitacao['condicoes_financeiras'] == 'Sim' ? 'Sim' : 'Não' ?></td>
+            <td><?= $solicitacao['experiencia_animais'] == 'Sim' ? 'Sim' : 'Não' ?></td>
+            <td><?= $solicitacao['outros_animais'] == 'Sim' ? 'Sim' : 'Não' ?></td>
+            <td><?= $solicitacao['compromisso'] == 'Sim' ? 'Sim' : 'Não' ?></td>
+            <td><?= date('d/m/Y H:i', strtotime($solicitacao['data_solicitacao'])) ?></td>
           </tr>
         <?php endforeach; ?>
       </tbody>
