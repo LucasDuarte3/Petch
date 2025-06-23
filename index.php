@@ -40,10 +40,101 @@ try {
     <title>Peth - Adote um Animal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="<?= ASSETS_PATH ?>/styleIndex.css">
+    <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      background-color: #f1f1f1;
+      color: #003366;
+    }
+
+    .topbar {
+      background-color: #0047a0;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      height: 80px;
+    }
+
+    .logo {
+      font-weight: bold;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-link {
+      color: white;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      height: 100%;
+      padding: 0 10px;
+      transition: opacity 0.3s;
+    }
+
+    .menu {
+      padding: 8px 12px;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    .menu:hover {
+      background-color: rgba(255,255,255,0.1);
+    }
+
+    .user-icon a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100px;
+      height: 80px;
+      text-decoration: none;
+      color: white;
+    }
+
+    .logout-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100px;
+      height: 80px;
+      
+    }
+
+    .user-icon a:hover {
+      background-color: rgba(255,255,255,0.2);
+    }
+
+    .icon {
+      text-decoration: none;
+      color: white;
+    }
+  </style>
 </head>
 
 <body>
-    <div><?php include 'app/views/header.php'; ?></div>
+    <header class="topbar">
+    <div class="logo">
+         <a href="<?= PUBLIC_PATH ?>/index.php" class="logo-link">❤️ Petch</a>
+       </div>
+
+    <nav>
+      <a href="<?= PUBLIC_PATH ?>/consulta_animal.php" class="menu icon">Buscar Animal</a>
+    </nav>
+
+    <div style="display: flex; gap: 10px;">
+      <div class="user-icon">
+        <a href="<?= PUBLIC_PATH ?>/cadastro.php"><i class="fas fa-user icon"></i>Cadastre-se</a>
+      </div>
+      <div class="logout-icon">
+        <a href="<?= PUBLIC_PATH ?>/login.php" class="icon"><i class="fas fa-sign-out-alt"></i>Logar</a>
+      </div>
+    </div>
+  </header>
 
     <div class="hero-section">
         <img src="<?= IMG_PATH ?>/imagemFundoInicial.jpg" alt="Banner principal" class="hero-image">

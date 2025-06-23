@@ -53,6 +53,38 @@ class Animal{
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function deletarAnimal($id){
+        $sql = "DELETE FROM animais WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$id]);
+    }
+    public function atualizarAnimal($id, $dados) {
+        $sql = "UPDATE animais SET 
+                    nome = ?, 
+                    especie = ?, 
+                    raca = ?, 
+                    idade = ?, 
+                    porte = ?, 
+                    descricao = ?, 
+                    historico_medico = ?, 
+                    status = ?, 
+                    caminho_foto = ?, 
+                    usuario_id = ?, 
+                    localidade = ?, 
+                    data_cadastro = ? 
+                WHERE id = ?";
+        
+        $stmt = $this->pdo->prepare($sql);
+        
+        // Adiciona o ID ao final do array para corresponder aos placeholders
+        $dados[] = $id;
+        
+        return $stmt->execute(array_values($dados)); 
+        
+    }
+
+
     // funções para aparecer na seção do perfil do usuário
     public function countAnimaisDivulgados()
     {
@@ -81,5 +113,39 @@ class Animal{
             return 0;
         }
     }
+
+    public function buscarAnimaisPorFiltros($especie = null, $raca = null, $idade = null, $porte = null) {
+    try {
+        $sql = "SELECT * FROM animais WHERE status = 'disponível'";
+        $params = [];
+        
+        if (!empty($especie)) {
+            $sql .= " AND especie = ?";
+            $params[] = $especie;
+        }
+        
+        if (!empty($raca)) {
+            $sql .= " AND raca LIKE ?";
+            $params[] = "%$raca%";
+        }
+        
+        if (!empty($idade)) {
+            $sql .= " AND idade = ?";
+            $params[] = $idade;
+        }
+        
+        if (!empty($porte)) {
+            $sql .= " AND porte = ?";
+            $params[] = $porte;
+        }
+        
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erro na busca de animais: " . $e->getMessage());
+        return [];
+    }
+}
 }
 ?>

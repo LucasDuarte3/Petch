@@ -26,7 +26,7 @@ if (isset($_SESSION['sucesso'])) {
     <link rel="stylesheet" href="<?= ASSETS_PATH ?>/styleCadastro.css">
 </head>
 <body>
-    <div><?php require ROOT_PATH . '/app/views/header.php'; ?></div>
+    
     <div class="split-layout">
         <!-- Coluna Alternada (Esquerda) -->
     <div class="alternate-column">

@@ -12,29 +12,35 @@ require_once dirname(__DIR__) . '/../app/models/Animal.php'; // Classe Animal
 $animalModel = new Animal($pdo);
 $animaisDivulgados = $animalModel->countAnimaisDivulgados();
 $animaisAdotados = $animalModel->countAnimaisAdotados();
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['acao'] === 'consultar'){
-    $animal = new Animal($pdo);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['acao'] === 'consultar') {
     try {
-        // validações dos campos obrigatorios para cadastro
-        if (empty($_POST["id"])) {
-            throw new Exception("Preencha o campo de ID!");
+        // Coletar parâmetros de busca
+        $especie = $_POST['especie'] ?? null;
+        $raca = $_POST['raca'] ?? null;
+        $idade = $_POST['idade'] ?? null;
+        $porte = $_POST['porte'] ?? null;
+        
+        // Verificar se pelo menos um critério foi preenchido
+        if (empty($especie) && empty($raca) && empty($idade) && empty($porte)) {
+            throw new Exception("Preencha pelo menos um critério de busca!");
         }
-
-        // Cadastro do usuario 
-        if ($animal->getAnimalByID($_POST['id'])) {
-            echo '<pre>'; 
-            print_r($animal -> getAnimalByID($_POST['id'])); 
-            echo '</pre>';
-        } else {
-            throw new Exception("Erro ao encontrar o cadastro do animal!");
+        
+        // Buscar animais com os critérios fornecidos
+        $resultados = $animalModel->buscarAnimaisPorFiltros($especie, $raca, $idade, $porte);
+        
+        if (empty($resultados)) {
+            throw new Exception("Nenhum animal encontrado com os critérios informados!");
         }
-
+        
+        // Armazenar resultados na sessão para exibição
+        $_SESSION['resultados_busca'] = $resultados;
+        header("Location: " . PUBLIC_PATH . "/resultados_busca.php");
+        exit;
+        
     } catch (Exception $e) {
-        // Captura a exceção e exibe a mensagem de erro
         $_SESSION['erro'] = $e->getMessage();
         header("Location: " . PUBLIC_PATH . "/consulta_animal.php");
         exit;
     }
 }
-
 ?>
