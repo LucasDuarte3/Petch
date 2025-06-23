@@ -69,6 +69,7 @@ class Admin
                     f.outros_animais,
                     f.compromisso
                 FROM form_adocao f
+                 LEFT JOIN usuarios u ON f.usuario_id = u.id
                 LEFT JOIN animais a ON f.animal_id = a.id
                 WHERE 1=1";
         

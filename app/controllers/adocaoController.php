@@ -11,6 +11,8 @@ if (session_status() === PHP_SESSION_NONE) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Ajusta aqui para pegar os campos EXATAMENTE como na tabela!
+    $usuario_id = $_POST['usuario_id'] ?? null;
+
     $nome                   = trim($_POST['nome'] ?? '');
     $email                  = trim($_POST['email'] ?? '');
     $telefone               = trim($_POST['telefone'] ?? '');
@@ -41,27 +43,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['erro'] = implode('<br>', $erros);
         header('Location: ' . BASE_PATH . '/public/formadocao.php');
         exit;
-    }
+    }}
 
     // Salva no banco
-    try {
-        $sql = "INSERT INTO form_adocao 
-            (nome, email, telefone, endereco, tipo_moradia, possui_tela_protecao, condominio_aceita, espaco_para_animal, condicoes_financeiras, compromisso)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([
-            $nome, $email, $telefone, $endereco, $tipo_moradia, $possui_tela_protecao,
-            $condominio_aceita, $espaco_para_animal, $condicoes_financeiras, $compromisso
-        ]);
-        $_SESSION['sucesso'] = "Solicitação de adoção enviada com sucesso! Aguarde retorno por e-mail.";
-        header('Location: ' . BASE_PATH . '/index.php');
-        exit;
-    } catch (PDOException $e) {
-        $_SESSION['erro'] = "Erro ao enviar solicitação: " . htmlspecialchars($e->getMessage());
-        header('Location: ' . BASE_PATH . '/public/formadocao.php');
-        exit;
-    }
-} else {
+try {
+    $sql = "INSERT INTO form_adocao (
+                usuario_id,
+                nome,
+                email,
+                telefone,
+                endereco,
+                tipo_moradia,
+                possui_tela_protecao,
+                condominio_aceita,
+                espaco_para_animal,
+                condicoes_financeiras,
+                motivo_adocao,
+                experiencia_animais,
+                outros_animais,
+                compromisso
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        $usuario_id,
+        $nome,
+        $email,
+        $telefone,
+        $endereco,
+        $tipo_moradia,
+        $possui_tela_protecao,
+        $condominio_aceita,
+        $espaco_para_animal,
+        $condicoes_financeiras,
+        $_POST['motivo_adocao'] ?? '',
+        $_POST['experiencia_animais'] ?? '',
+        $_POST['outros_animais'] ?? '',
+        $compromisso
+    ]);
+    $_SESSION['sucesso'] = "Solicitação de adoção enviada com sucesso! Aguarde retorno por e-mail.";
+    header('Location: ' . BASE_PATH . '/index.php');
+    exit;
+} catch (PDOException $e) {
+    $_SESSION['erro'] = "Erro ao enviar solicitação: " . htmlspecialchars($e->getMessage());
     header('Location: ' . BASE_PATH . '/public/formadocao.php');
     exit;
 }

@@ -153,7 +153,16 @@ $solicitacoes = $adminModel->listarSolicitacoesAdocao(); // Aqui estão as solic
                             ?>
                             <tr>
                                 <td><?= htmlspecialchars($solicitacao['usuario_nome']) ?></td>
-                                <td><?= htmlspecialchars($solicitacao['animal_nome'] ?? 'N/A') ?></td>
+                                <?php if (! empty($solicitacao['animal_id'])): ?>
+  <td>
+    <a href="<?= PUBLIC_PATH ?>/animal.php?id=<?= intval($solicitacao['animal_id']) ?>">
+      <?= htmlspecialchars($solicitacao['animal_nome']) ?>
+    </a>
+  </td>
+<?php else: ?>
+  <td>N/A</td>
+<?php endif; ?>
+
                                 <td><?= date('d/m/Y H:i', strtotime($solicitacao['data_solicitacao'])) ?></td>
                                 <td>
                                     <form method="post" action="<?= ADMIN_PATH ?>/AdminController" style="display:inline;">
@@ -349,6 +358,9 @@ $solicitacoes = $adminModel->listarSolicitacoesAdocao(); // Aqui estão as solic
         </tr>
       </thead>
       <tbody>
+        <pre>
+<?php print_r($solicitacoes); ?>
+</pre>
         <?php foreach ($solicitacoes as $solicitacao): ?>
           <tr>
             <td><?= htmlspecialchars($solicitacao['id']) ?></td>

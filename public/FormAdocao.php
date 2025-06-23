@@ -46,8 +46,10 @@ if (isset($_SESSION['sucesso'])) {
       Suas informações pessoais já foram preenchidas pelo sistema.</p>
 
 <form method="POST" action="<?= CONTROLLERS_PATH ?>/adocaoController.php">
-  <input type="hidden" name="nome" value="<?= htmlspecialchars($usuario['nome'] ?? '') ?>">
-  <input type="hidden" name="email" value="<?= htmlspecialchars($usuario['email'] ?? '') ?>">
+ <input type="hidden" name="usuario_id" value="<?= htmlspecialchars($usuario['id'] ?? '') ?>">
+<input type="hidden" name="nome" value="<?= htmlspecialchars($usuario['nome'] ?? '') ?>">
+<input type="hidden" name="email" value="<?= htmlspecialchars($usuario['email'] ?? '') ?>">
+
 
 
   <?php if (isset($_GET['animal_id'])): ?>
