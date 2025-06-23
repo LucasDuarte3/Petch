@@ -22,7 +22,7 @@ try {
 // $stmt = $pdo->query("SELECT id, nome, especie, raca, idade, porte, descricao, foto_blob FROM animais ORDER BY id DESC");
 
 // Agora: só traz animais disponíveis (aprovados pelo admin)
-    $stmt = $pdo->query("SELECT id, nome, especie, raca, idade, porte, descricao, foto_blob 
+    $stmt = $pdo->query("SELECT id, nome, especie, raca, idade, porte, comportamento AS descricao, foto_blob 
                      FROM animais 
                      WHERE status = 'disponível'
                      ORDER BY id DESC");
@@ -133,6 +133,9 @@ try {
       <div class="logout-icon">
         <a href="<?= PUBLIC_PATH ?>/login.php" class="icon"><i class="fas fa-sign-out-alt"></i>Logar</a>
       </div>
+      <div class="logout-icon">
+        <a href="<?= PUBLIC_PATH ?>/perfil.php" class="icon"><i class="fas fa-sign-out-alt"></i>Perfil</a>
+      </div>
     </div>
   </header>
 
@@ -184,7 +187,7 @@ try {
           data-raca="<?= htmlspecialchars($animal['raca']) ?>"
           data-idade="<?= htmlspecialchars($animal['idade']) ?>"
           data-porte="<?= htmlspecialchars($animal['porte']) ?>"
-          data-desc="<?= htmlspecialchars($animal['descricao']) ?>"
+          data-descricao="<?= htmlspecialchars($animal['descricao']) ?>"
           data-img="data:image/jpeg;base64,<?= $base64 ?>"
             data-id="<?= $animal['id'] ?>"
         >
@@ -247,6 +250,7 @@ try {
             <li><b>Raça:</b> <span id="modalAnimalRaca"></span></li>
             <li><b>Idade:</b> <span id="modalAnimalIdade"></span></li>
             <li><b>Porte:</b> <span id="modalAnimalPorte"></span></li>
+            <li><b>Descrição:</b><span id="modalAnimalDescricao"></span></li>
           </ul>
           <div id="modalAnimalDesc" class="mb-4" style="color: #444;"></div>
           <button type="button" id="btnQueroAdotar" class="btn btn-warning btn-lg w-100" style="font-weight:bold; border-radius:12px;">
@@ -270,7 +274,7 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById('modalAnimalRaca').textContent = img.dataset.raca;
       document.getElementById('modalAnimalIdade').textContent = img.dataset.idade + " ano(s)";
       document.getElementById('modalAnimalPorte').textContent = img.dataset.porte;
-      document.getElementById('modalAnimalDesc').textContent = img.dataset.desc;
+      document.getElementById('modalAnimalDescricao').textContent = img.dataset.descricao;
       document.getElementById('modalAnimalImg').src = img.dataset.img;
 currentAnimalId = img.dataset.id;
       // Abre o modal do bootstrap

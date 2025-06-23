@@ -80,9 +80,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao'])) {
                 break;
         }
         // Redirecionamento padronizado (mantido igual aos outros cases)
-        $redirect = $_POST['redirect'] ?? 'dashboard';
-        header("Location: " . ADMIN_PATH . "/" . $redirect . ".php");
-        exit;
+       $redirect = $_POST['redirect'] ?? 'dashboard';
+
+if ($redirect === 'perfil') {
+    // volta para a página de perfil pública
+    header("Location: " . PUBLIC_PATH . "/perfil.php");
+} else {
+    // continua redirecionando para as páginas do admin
+    header("Location: " . ADMIN_PATH . "/" . $redirect . ".php");
+}
+exit;
+
     } catch (Exception $e) {
         $_SESSION['erro'] = $e->getMessage();
         $redirect = $_POST['redirect'] ?? 'dashboard';

@@ -54,11 +54,22 @@ class Animal{
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function deletarAnimal($id){
-        $sql = "DELETE FROM animais WHERE id = ?";
-        $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([$id]);
-    }
+public function deletarAnimal(int $id, int $usuarioId): bool {
+    $sql = "DELETE FROM animais WHERE id = :id AND usuario_id = :uid";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute([ 'id'=>$id, 'uid'=>$usuarioId ]);
+    return $stmt->rowCount() > 0;
+}
+
+public function buscarAnimaisPorFiltros($especie, $raca, $idade, $porte, $usuarioId) {
+    $sql = "SELECT * FROM animais WHERE usuario_id = ?"; 
+    $params = [$usuarioId];
+    // ... resto dos filtros ...
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute($params);
+    return $stmt->fetchAll();
+}
+
     public function atualizarAnimal($id, $dados) {
         $sql = "UPDATE animais SET 
                     nome = ?, 
@@ -114,38 +125,6 @@ class Animal{
         }
     }
 
-    public function buscarAnimaisPorFiltros($especie = null, $raca = null, $idade = null, $porte = null) {
-    try {
-        $sql = "SELECT * FROM animais WHERE status = 'disponível'";
-        $params = [];
-        
-        if (!empty($especie)) {
-            $sql .= " AND especie = ?";
-            $params[] = $especie;
-        }
-        
-        if (!empty($raca)) {
-            $sql .= " AND raca LIKE ?";
-            $params[] = "%$raca%";
-        }
-        
-        if (!empty($idade)) {
-            $sql .= " AND idade = ?";
-            $params[] = $idade;
-        }
-        
-        if (!empty($porte)) {
-            $sql .= " AND porte = ?";
-            $params[] = $porte;
-        }
-        
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($params);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        error_log("Erro na busca de animais: " . $e->getMessage());
-        return [];
-    }
-}
+
 }
 ?>

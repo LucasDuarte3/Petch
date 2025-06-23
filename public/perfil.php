@@ -24,6 +24,25 @@ require_once ROOT_PATH . '/app/controllers/UserController.php';
 // Busca os dados do usuário logado
 $userModel = new User($pdo);
 $usuario = $userModel->getById($_SESSION['usuario']['id']);
+
+$stmt = $pdo->prepare("
+    SELECT 
+      fa.id                AS solicitacao_id,
+      fa.criado_em         AS data_solicitacao,
+      u.nome               AS solicitante_nome,
+      u.email              AS solicitante_email,
+      u.telefone           AS solicitante_telefone,
+      a.id                 AS animal_id,
+      a.nome               AS animal_nome
+    FROM form_adocao fa
+    JOIN usuarios u ON fa.usuario_id = u.id
+    JOIN animais  a ON fa.animal_id = a.id
+    WHERE a.usuario_id = :meuId
+      AND fa.status   = 'pendente'
+    ORDER BY fa.criado_em DESC
+");
+$stmt->execute(['meuId' => $usuario['id']]);
+$solicitacoesRecebidas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -88,6 +107,9 @@ $usuario = $userModel->getById($_SESSION['usuario']['id']);
     <form action="<?= PUBLIC_PATH ?>/cadastro_animal.php" method="get">
     <button type="submit" class="btn">Cadastrar novo animal</button>
     </form>
+    <form action="<?= PUBLIC_PATH ?>/deletar_animal.php" method="get">
+    <button type="submit" class="btn">Excluir Anuncio</button>
+    </form>
 
 
   
@@ -118,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     toasts.forEach(toast => {
         // Remove o toast após 3 segundos (tempo da animação)
-        setTimeout(() => {
+        setTimeout(() => {  
             toast.remove();
             // Remove o container se não houver mais toasts
             const container = document.querySelector('.toast-container');

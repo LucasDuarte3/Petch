@@ -27,7 +27,10 @@ if (isset($_SESSION['sucesso'])) {
 $adminModel = new Admin($pdo);// Instanciamos o Admin model pra usar as funções de contagem, listagem, etc
 $totalUsuarios = $adminModel->countUsers();
 $totalAnimais = $adminModel->countAnimals();
-$totalAdocoes = $adminModel->countAdoptions();
+$totalPendentes = $adminModel->countAdoptionsByStatus('pendente');
+$totalAprovadas = $adminModel->countAdoptionsByStatus('aprovado');
+$totalRecusadas = $adminModel->countAdoptionsByStatus('negado');
+
 $solicitacoes = $adminModel->listAdoptions(['status' => 'pendente']);
 
 $stmt = $pdo->query("SELECT status, COUNT(*) as total FROM form_adocao GROUP BY status");// Preparamos dados de status das adoções, pra mostrar nos gráficos do dashboard
@@ -79,7 +82,7 @@ $solicitacoes = $adminModel->listarSolicitacoesAdocao(); // Aqui estão as solic
 <div class="dashboard-container">
     <div class="sidebar">
         <div class="logo">
-            <img id="LogoAdmin" src="<?= IMG_PATH ?>/AvatarF.png" alt="Logo">
+            <img id="LogoAdmin" src="<?= IMG_PATH ?>/Avatar.png" alt="Logo">
             <span>Administrador</span>
         </div>
         <nav>
@@ -128,8 +131,8 @@ $solicitacoes = $adminModel->listarSolicitacoesAdocao(); // Aqui estão as solic
                         <i class="bi bi-file-earmark-check"></i>
                     </div>
                     <div class="stat-info">
-                        <h3><?= $totalAdocoes ?></h3>
-                        <p>Solicitações de Adoção</p>
+                        <h3><?= $adocoesAprovadas ?></h3>
+                        <p>Solicitações Aprovadas</p>
                     </div>
                 </div>
             </div>
@@ -165,20 +168,25 @@ $solicitacoes = $adminModel->listarSolicitacoesAdocao(); // Aqui estão as solic
 
                                 <td><?= date('d/m/Y H:i', strtotime($solicitacao['data_solicitacao'])) ?></td>
                                 <td>
-                                    <form method="post" action="<?= ADMIN_PATH ?>/AdminController" style="display:inline;">
-                                        <input type="hidden" name="acao" value="aprovar_adocao">
-                                        <input type="hidden" name="adocao_id" value="<?= $solicitacao['id'] ?>">
-                                        <input type="hidden" name="animal_id" value="<?= $solicitacao['animal_id'] ?? '' ?>">
-                                        <button type="submit" class="btn btn-success btn-sm">
-                                            <i class="bi bi-check"></i> Aprovar
-                                        </button>
+<form method="post" action="<?= ADMIN_PATH ?>/controller/AdminController.php" style="display:inline;">
+    <input type="hidden" name="acao" value="aprovar_adocao">
+    <input type="hidden" name="adocao_id" value="<?= intval($solicitacao['id']) ?>">
+    <input type="hidden" name="animal_id" value="<?= intval($solicitacao['animal_id'] ?? 0) ?>">
+    <input type="hidden" name="redirect" value="dashboard">
+    <button type="submit" class="btn btn-success btn-sm">
+        <i class="bi bi-check"></i> Aprovar
+    </button>
+</form>
                                     </form>
-                                    <form method="post" action="<?= ADMIN_PATH ?>/AdminController" style="display:inline;">
-                                        <input type="hidden" name="acao" value="recusar_adocao">
-                                        <input type="hidden" name="adocao_id" value="<?= $solicitacao['id'] ?>">
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="bi bi-x"></i> Recusar
-                                        </button>
+                                    <form method="post" action="<?= ADMIN_PATH ?>/controller/AdminController.php" style="display:inline;">
+    <input type="hidden" name="acao" value="recusar_adocao">
+    <input type="hidden" name="adocao_id" value="<?= intval($solicitacao['id']) ?>">
+    <input type="hidden" name="redirect" value="dashboard">
+    <button type="submit" class="btn btn-danger btn-sm">
+        <i class="bi bi-x"></i> Recusar
+    </button>
+</form>
+
                                     </form>
                                 </td>
                             </tr>
@@ -358,9 +366,7 @@ $solicitacoes = $adminModel->listarSolicitacoesAdocao(); // Aqui estão as solic
         </tr>
       </thead>
       <tbody>
-        <pre>
-<?php print_r($solicitacoes); ?>
-</pre>
+
         <?php foreach ($solicitacoes as $solicitacao): ?>
           <tr>
             <td><?= htmlspecialchars($solicitacao['id']) ?></td>

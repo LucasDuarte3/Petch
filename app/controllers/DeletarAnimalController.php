@@ -9,6 +9,7 @@ require_once dirname(__DIR__) . '/../config/database.php';
 require_once dirname(__DIR__) . '/../app/models/Animal.php';
 
 $animalModel = new Animal($pdo);
+$userId = $_SESSION['usuario']['id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
@@ -23,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 throw new Exception("Preencha pelo menos um critério de busca!");
             }
             
-            $resultados = $animalModel->buscarAnimaisPorFiltros($especie, $raca, $idade, $porte);
+            $resultados = $animalModel->buscarAnimaisPorFiltros($especie, $raca, $idade, $porte, $userId );
             
             if (empty($resultados)) {
                 throw new Exception("Nenhum animal encontrado com os critérios informados!");
@@ -41,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             
             $id = (int)$_POST['id_animal'];
-            if ($animalModel->deletarAnimal($id)) {
+            if ($animalModel->deletarAnimal($id, $userId)) {
                 $_SESSION['sucesso'] = "Animal excluído com sucesso!";
             } else {
                 throw new Exception("Erro ao excluir o animal!");

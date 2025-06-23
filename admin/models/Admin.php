@@ -7,14 +7,15 @@ class Admin
     {
         $this->pdo = $pdo;
     }
-    public function countAdoptions()
-    {
-        $sql = "SELECT COUNT(*) as total FROM historico_adocoes";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $row['total'];
-    }
+  public function countAdoptions(): int
+{
+    $stmt = $this->pdo->query(
+      "SELECT COUNT(*) 
+         FROM form_adocao"
+    );
+    return (int) $stmt->fetchColumn();
+}
+
 
     public function processarFormularioAdocao($dados) {
     $sql = "INSERT INTO form_adocao (
@@ -325,6 +326,15 @@ public function listarSolicitacoesAdocao() {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-
+public function countAdoptionsByStatus(string $status): int
+{
+    $stmt = $this->pdo->prepare("
+      SELECT COUNT(*) 
+        FROM form_adocao 
+       WHERE status = :status
+    ");
+    $stmt->execute(['status' => $status]);
+    return (int) $stmt->fetchColumn();
+}
 
 }
